@@ -1,46 +1,54 @@
-const Drone = require("../Models/DroneModel");
+const Drone = require("../models/DroneModel");
+const mqttClient = require('../mqtt/droneMQTT');
 
+//responsible for handling HTTP requests/responses for the web client
 
 //get data from server to client
 const getStatus = async (req, res) => {
-
     try {
         const drones = await Drone.find();
         console.log(drones);
-
-
+        if (!drones) {
+            res.status(404).json({message: "Drones not found"});
+        }
         res.json(drones);
     } catch (err) {
         console.log(err)
-        res.status(500).send('Server Error');
+        res.status(500).json({message: 'Error finding drones'});
 
     }
 };
 
-//get data from microcontroller to mongoDB
-// Create a new drone
-const createDrone = async (req, res) => {
-    const {name} = req.body;
-    console.log(name); // log the data received from the microcontroller
-    const drone = new Drone({name, status: 'idle'});
+//create drone and save to mongoDB, publish to the broker
+const registerDrone = async (req, res) => {
+    console.log(req.body);
+
     try {
+        const {droneIdentifier, status} = req.body;
+        const drone = new Drone({droneIdentifier, status});
+
         const savedDrone = await drone.save();
-        //create
+        const topic = `drone/${droneIdentifier}/new`;
+        // publish message to MQTT broker that a new drone has been registered
+        mqttClient.publish(topic, JSON.stringify({
+            droneIdentifier: droneIdentifier
+        }));
+
         res.status(201).json(savedDrone);
     } catch (err) {
         console.error(err);
-        res.status(500).json({message: 'Error creating drone'});
+        res.status(500).json({message: 'Error registering drone'});
     }
 };
 
-// Update the status of a drone
-const updateStatus = async (req, res) => {
+// Update name drone
+const updateDroneIdentifier = async (req, res) => {
     const {id} = req.params;
-    const {status} = req.body;
+    const {droneIdentifier} = req.body.droneIdentifier;
     try {
         const updatedDrone = await Drone.findByIdAndUpdate(
             id,
-            {$set: {status}},
+            {$set: {droneIdentifier}},
             {new: true},
         );
         if (!updatedDrone) {
@@ -53,9 +61,33 @@ const updateStatus = async (req, res) => {
     }
 };
 
+//MQTT
+//controls drone (UI -> server -> broker -> drone)
+const sendCommand = async (req, res) => {
+    const droneIdentifier = req.params.droneIdentifier;
+    const command = req.body.command;
+    try {
+        if (!droneIdentifier) {
+            res.status(404).json({message: "droneIdentifier not found"});
+        }
+        // Send the command to the drone using the MQTT protocol
+        const topic = `drone/${droneIdentifier}/command`;
+        const payload = JSON.stringify({command});
+        mqttClient.publish(topic, payload);
+
+        res.status(200).send({
+            message: 'Command sent successfully'
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({message: 'Error sending drone command'});
+    }
+};
+
 
 module.exports = {
     getStatus,
-    createDrone,
-    updateStatus
+    registerDrone,
+    updateDroneIdentifier,
+    sendCommand
 };
