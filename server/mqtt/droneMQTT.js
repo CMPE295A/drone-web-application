@@ -35,12 +35,11 @@ client.on('connect', () => {
 //message handling
 client.on('message', async (topic, message) => {
     console.log('received message:', message.toString());
-    const payload = JSON.parse(message.toString()); //convert to JSON format
     //retrieve droneIdentifier and topic name
     const [_, droneIdentifier, topicName] = topic.split('/'); //drone/{droneIdentifier}/{topicName}
 
-
     try {
+        const payload = JSON.parse(message.toString()); //convert to JSON format
 
         //update drone status
         if (topicName === 'status') {

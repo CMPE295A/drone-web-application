@@ -7,11 +7,11 @@ const handleBattery = async (droneIdentifier, message) => {
         // process the message to determine which drone's battery is low
         const batteryLevel = message;
 
-        // // Validate the data
+        // Validate the data
         if (typeof batteryLevel !== 'number') {
             throw new Error('Invalid battery payload');
         }
-        //
+
         // take appropriate actions based on the battery level
         const battery = await batteryModel.findOneAndUpdate(
             {droneIdentifier},
