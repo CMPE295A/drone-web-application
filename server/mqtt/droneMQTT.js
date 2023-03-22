@@ -2,6 +2,7 @@ const mqtt = require('mqtt'); //API for creating an MQTT client
 const {handleStatus} = require('../messageHandler/droneMessageHandler');
 const {handleGPS} = require('../messageHandler/gpsMessageHandler');
 const {handleBattery} = require("../messageHandler/batteryMessageHandler");
+const {handleVideo} = require("../messageHandler/videoMessageHandler");
 
 const client = mqtt.connect('mqtt://localhost:1883');
 
@@ -19,6 +20,7 @@ client.on('connect', () => {
     client.subscribe('drone/+/status');
     client.subscribe('drone/+/gps');
     client.subscribe('drone/+/battery');
+    client.subscribe('drone/+/video');
 
 
 });
@@ -29,7 +31,6 @@ client.on('connect', () => {
 //         console.log('Message published');
 //         // client.end(); // close connection to broker
 //     });
-//creates new drone
 
 
 //message handling
@@ -39,7 +40,7 @@ client.on('message', async (topic, message) => {
     const [_, droneIdentifier, topicName] = topic.split('/'); //drone/{droneIdentifier}/{topicName}
 
     try {
-        const payload = JSON.parse(message.toString()); //convert to JSON format
+        const payload = JSON.parse(message.toString()); //convert JSON to object
 
         //update drone status
         if (topicName === 'status') {
@@ -52,6 +53,10 @@ client.on('message', async (topic, message) => {
         //update battery status
         else if (topicName === 'battery') {
             await handleBattery(droneIdentifier, payload);
+        }
+        //update the video data
+        else if (topicName === 'video') {
+            await handleVideo(droneIdentifier, payload);
         } else {
             console.error(`Invalid topic: ${topic}`);
         }
