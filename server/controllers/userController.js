@@ -1,5 +1,7 @@
 const UserModel = require('../Models/userModel');
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const {secretKey} = require("../Utils/config");
 
 const signup = async (req, res) => {
     try {
@@ -22,9 +24,15 @@ const signup = async (req, res) => {
         } else {
             const data = await newUser.save();
 
-            console.log(data);
+            const payload = {_id: data._id, username: data.username};
+            const token = jwt.sign(payload, secretKey, {
+                expiresIn: 1008000,
+            });
 
-            res.status(201).json({message: "Signed up"});
+            res.status(201).json({token});
+            console.log("signed up: " + data);
+
+            // res.status(201).json({message: "Signed up"});
         }
     } catch (err) {
         res.status(500).json({message: err.message});
@@ -49,8 +57,15 @@ const login = async (req, res) => {
             res.status(400).json({message: "Invalid credentials"});
         } else {
 
+            const payload = {_id: user._id, username: user.username};
+            const token = jwt.sign(payload, secretKey, {
+                expiresIn: 1008000,
+            });
+
+            res.status(200).json({token});
+
             console.log("Successful login");
-            res.status(200).json({message: "Successful login"});
+
         }
 
 
