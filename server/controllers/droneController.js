@@ -24,13 +24,13 @@ const registerDrone = async (req, res) => {
     console.log(req.body);
 
     try {
-        const {droneIdentifier, status} = req.body;
-        const drone = new Drone({droneIdentifier, status});
+        const {droneIdentifier} = req.body;
+        const drone = new Drone({droneIdentifier});
 
         const savedDrone = await drone.save();
         const topic = `drone/${droneIdentifier}/new`;
         // publish message to MQTT broker that a new drone has been registered
-        mqttClient.publish(topic, JSON.stringify({
+        mqttClient.publish(topic, JSON.stringify({ //convert to JSON
             droneIdentifier: droneIdentifier
         }));
 

@@ -4,14 +4,31 @@ const {handleGPS} = require('../messageHandler/gpsMessageHandler');
 const {handleBattery} = require("../messageHandler/batteryMessageHandler");
 const {handleVideo} = require("../messageHandler/videoMessageHandler");
 
-const client = mqtt.connect('mqtt://localhost:1883');
+// const client = mqtt.connect('mqtt://localhost:1883'); //for mosquitto broker
 
-//connect to broker (network that receives messages and sends to subscribers)
+//AWS IoT endpoint
+const endpoint = process.env.AWS_IOT_HOST_ENDPOINT;
+// AWS IoT certificate and private key
+const certificatePath = process.env.AWS_CERTIFICATE_PATH;
+const privateKeyPath = process.env.AWS_PRIVATE_KEY_PATH;
+// Load the certificate and private key
+const fs = require('fs');
+const certificate = fs.readFileSync(certificatePath);
+const privateKey = fs.readFileSync(privateKeyPath);
+
+// Connect to the AWS IoT broker using MQTT
+const client = mqtt.connect({
+    host: endpoint,
+    port: 8883,
+    protocol: 'mqtts', //secure
+    cert: certificate,
+    key: privateKey,
+});
+
+// connect to broker (network that receives messages and sends to subscribers)
 client.on('connect', () => {
-    console.log('Connected to MQTT broker');
-
-
-    // client.subscribe('test');
+    // console.log('Connected to MQTT broker');
+    console.log('Connected to AWS IoT Core broker');
 
     //subscribe to the topics
     //+ wildcard for specific drone id
@@ -21,17 +38,7 @@ client.on('connect', () => {
     client.subscribe('drone/+/gps');
     client.subscribe('drone/+/battery');
     client.subscribe('drone/+/video');
-
-
 });
-
-// publish a message to the 'test' topic
-// // publish a message to the 'test' topic
-//     client.publish('test', 'Hello, MQTT!', function() {
-//         console.log('Message published');
-//         // client.end(); // close connection to broker
-//     });
-
 
 //message handling
 client.on('message', async (topic, message) => {
