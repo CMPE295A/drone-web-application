@@ -3,18 +3,20 @@ const GPS = require('../Models/gpsModel');
 //handles gps data from broker
 const handleGPS = async (droneIdentifier, message) => {
     try {
-        const {latitude, longitude, altitude} = message;
+        // const {latitude, longitude, altitude} = message;
+        const {latitude, longitude} = message;
 
-        // Validate the data
-        if (!latitude || !longitude || !altitude) {
-            throw new Error('Invalid location payload');
-        }
+        // // Validate the data
+        // if (!latitude || !longitude || !altitude) {
+        //     throw new Error('Invalid location payload');
+        // }
 
 
         // Update the GPS data for the specified drone
         const updatedGPSData = await GPS.findOneAndUpdate(
             {droneIdentifier}, // find droneIdentifier
-            {latitude, longitude, altitude}, // Update the GPS fields
+            // {latitude, longitude, altitude}, // Update the GPS fields
+            {latitude, longitude}, // Update the GPS fields
             {new: true, upsert: true} // update if document exists, create a new one if not
         );
 

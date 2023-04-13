@@ -1,0 +1,12 @@
+.horizontal-battery-icon {
+  transform: rotate(90deg);
+  svg {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+.batteryPercentage {
+  font-size: 18px;
+  margin-left: 5px;
+}

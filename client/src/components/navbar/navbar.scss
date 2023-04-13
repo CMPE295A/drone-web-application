@@ -1,0 +1,17 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 2px solid;
+
+  .left {
+
+  }
+
+  .right {
+    display: flex;
+    gap: 20px;
+    cursor: pointer;
+
+  }
+}

@@ -39,9 +39,12 @@ mongoose.connect(mongoDB ,(err) => {
 //handles the http requests
 const droneRoute = require("./routes/drone");
 const userRoute = require("./routes/user");
+const gpsRoute = require("./routes/gps");
+
 
 app.use('/drone', droneRoute);
 app.use('/user', userRoute);
+app.use('/gps', gpsRoute);
 
 
 app.listen(port, () => {
