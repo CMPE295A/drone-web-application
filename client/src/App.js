@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import Register from "./pages/Register/Register";
 import Navbar from "./components/navbar/Navbar";
 import Main from "./pages/Main"
 import LeftBar from "./components/leftBar/LeftBar";
@@ -11,7 +12,7 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Main/>}/>
-              <Route path="/register" element={<Register/>}/>
+              {/*<Route path="/register" element={<Register/>}/>*/}
               <Route path="/navbar" element={<Navbar/>}/>
               <Route path="/leftbar" element={<LeftBar/>}/>
               <Route path="/map" element={<Map/>}/>
