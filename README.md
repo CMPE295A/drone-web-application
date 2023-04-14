@@ -10,3 +10,18 @@
 8. npm install
 9. npm start
 
+
+## How to connect to AWS IoT core
+1. Create an AWS IoT thing (Manage -> All Devices -> Things)
+    - Auto-generate certificate / use existing one / skip
+2. Create an AWS IoT policy (Security -> Policies -> Create a policy)
+    - Add statement (allow, action, resource)
+        - Resource: arn:aws:iot: REGION: Account ID:*
+        - Ex: arn:aws:iot:us-west-2:123456789:*
+3. Create an AWS IoT certificate (Security -> Certificates -> Add Certificate)
+    - Download the certificate and keys
+    - Attach policy to certificate if you haven't
+4. Configure the MQTT client in your code using the Host endpoint and port along with your certificate and keys
+5. Test using subscribe/publish to a topic on AWS IoT MQTT test client
+
+
