@@ -1,5 +1,4 @@
-const GPS = require("../models/gpsModel");
-const Drone = require("../Models/DroneModel");
+const GPS = require("../Models/gpsModel");
 
 const getLocation = async (req, res) => {
 

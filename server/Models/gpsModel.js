@@ -13,7 +13,6 @@ const gpsSchema = new Schema({
         },
         altitude: {
             type: Number,
-            required: true,
         },
     }, {timestamps: true}
 );

@@ -5,3 +5,9 @@ npm-debug.log
 
 # production
 /build
+
+
+
+*.pem
+*.pem.crt
+*.pem.key
