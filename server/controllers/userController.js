@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const {secretKey} = require("../Utils/config");
 
-const signup = async (req, res) => {
+const register = async (req, res) => {
     try {
         const {username, password} = req.body;
 
@@ -16,7 +16,9 @@ const signup = async (req, res) => {
             password: passwordHash,
         });
 
-        const userTaken = UserModel.findOne(username);
+        //Check if username is already taken
+        const userTaken = await UserModel.findOne({username});
+        console.log(username);
         if (userTaken) {
             //conflict
             res.status(409).json({message: "Username is taken"});
@@ -24,6 +26,7 @@ const signup = async (req, res) => {
         } else {
             const data = await newUser.save();
 
+            // Generate a JWT token
             const payload = {_id: data._id, username: data.username};
             const token = jwt.sign(payload, secretKey, {
                 expiresIn: 1008000,
@@ -33,6 +36,7 @@ const signup = async (req, res) => {
             console.log("signed up: " + data);
 
             // res.status(201).json({message: "Signed up"});
+            //todo cookie
         }
     } catch (err) {
         res.status(500).json({message: err.message});
@@ -46,7 +50,7 @@ const login = async (req, res) => {
         const user = await UserModel.findOne({username});
         if (!user) {
             console.log("no user found");
-            res.status(404).json({message: "Invalid Credentials. Wrong username or password"});
+            res.status(401).json({message: "Invalid Credentials. Wrong username or password."});
             return;
         }
 
@@ -54,17 +58,19 @@ const login = async (req, res) => {
         const match = await bcrypt.compare(password, user.password);
         console.log(user.password);
         if (!match) {
-            res.status(400).json({message: "Invalid credentials"});
+            res.status(401).json({message: "Invalid Credentials. Wrong username or password."});
+            console.log('wrong password');
         } else {
 
+            // Generate a JWT token
             const payload = {_id: user._id, username: user.username};
             const token = jwt.sign(payload, secretKey, {
                 expiresIn: 1008000,
             });
 
             res.status(200).json({token});
-
             console.log("Successful login");
+            //todo cookie
 
         }
 
@@ -77,6 +83,6 @@ const login = async (req, res) => {
 };
 
 module.exports = {
-    signup,
+    register,
     login
 }
