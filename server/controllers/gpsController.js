@@ -1,4 +1,4 @@
-const GPS = require("../Models/gpsModel");
+const GPS = require("../models/gpsModel");
 
 const getLocation = async (req, res) => {
 

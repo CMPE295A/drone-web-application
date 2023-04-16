@@ -1,4 +1,4 @@
-const GPS = require('../Models/gpsModel');
+const GPS = require('../models/gpsModel');
 
 //handles gps data from broker
 const handleGPS = async (droneIdentifier, message) => {

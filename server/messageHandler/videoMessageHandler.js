@@ -1,4 +1,4 @@
-const videoModel = require('../Models/videoModel');
+const videoModel = require('../models/videoModel');
 
 //update later
 //handles video data from broker
