@@ -40,11 +40,13 @@ mongoose.connect(mongoDB ,(err) => {
 const droneRoute = require("./routes/drone");
 const userRoute = require("./routes/user");
 const gpsRoute = require("./routes/gps");
+const batteryRoute = require("./routes/battery");
 
 
 app.use('/drone', droneRoute);
 app.use('/user', userRoute);
 app.use('/gps', gpsRoute);
+app.use('/battery', batteryRoute);
 
 
 app.listen(port, () => {
