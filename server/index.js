@@ -1,18 +1,31 @@
 require('dotenv').config();
-const express = require('express') //express module
+const express = require('express'); //express module
 const app = express(); // create an express app
 
-const cors = require('cors'); //allows all cross-origin requests to access the resources
-app.use(cors()); //configure allowed domain/origin
-// app.use(cors({origin: process.env.frontendURL, credentials: true}));
+//create a Socket.IO server for websocket and attach to http server
+const http = require('http').Server(app); //create http server
+const io = require('socket.io')(http, {
+    //handle websocket connection
+    cors: {
+        origin: [process.env.frontendURL, "http://localhost:4000"],
+    }
+});
 
-app.use(express.urlencoded({extended: true})); //parse incoming request bodies with URL-encoded data by the client
+const cors = require('cors'); //allows all cross-origin requests to access the resources
+app.use(cors({
+    //handle http API request
+    origin: [process.env.frontendURL, "http://localhost:4000"],
+    // credentials: true
+}));
+
+
+app.use(express.urlencoded({ extended: true })); //parse incoming request bodies with URL-encoded data by the client
 app.use(express.json()); // parse request bodies that are in JSON format.
 
 const port = 3000;
 
 //MQTT client starts when the web application starts
-require('./mqtt/droneMQTT');
+require('./mqtt/droneMQTT')(io); //pass 'io' object to the MQTT client module using dependency injection
 
 // const mqttClient = require('./mqtt/mqttClient');
 // const mqttClient = require('./mqtt/droneMQTT');
@@ -26,12 +39,20 @@ require('./mqtt/droneMQTT');
 const { mongoDB } = require('./Utils/config'); //dotenv.config();
 const mongoose = require('mongoose');
 
-mongoose.connect(mongoDB ,(err) => {
+//Connection pooling to improve the performance and scalability
+// reuse connection to db
+const options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    maxPoolSize: 100, // max connections in the pool
+};
+
+mongoose.connect(mongoDB, options, (err) => {
     if (err) {
         console.log(err);
-        console.log(`MongoDB Connection Failed`);
+        console.log('MongoDB Connection Failed');
     } else {
-        console.log(`MongoDB Connected`);
+        console.log('MongoDB Connected');
     }
 });
 
@@ -49,7 +70,17 @@ app.use('/gps', gpsRoute);
 app.use('/battery', batteryRoute);
 
 
-app.listen(port, () => {
+// Handle WebSocket connections
+io.on('connection', function (socket) {
+    console.log('Websocket connected');
+
+    socket.on('disconnect', function () {
+        console.log('Websocket disconnected');
+    });
+});
+
+//start the HTTP server for both Express app and Socket.IO server
+http.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
 

@@ -3,7 +3,7 @@ const batteryModel = require("../models/batteryModel"); //M and m conflict error
 const getBattery = async (req, res) => {
 
     const droneId = req.params.droneIdentifier;
-    console.log(droneId);
+    // console.log(droneId);
 
     try {
         if (!droneId) {
@@ -11,7 +11,7 @@ const getBattery = async (req, res) => {
         }
         const battery = await batteryModel.findOne({droneIdentifier: droneId}).sort({ timestamp: -1 });
 
-        console.log(battery);
+        // console.log(battery);
         if (!battery) {
             res.status(404).json({message: "battery level not found"});
         }

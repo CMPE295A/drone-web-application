@@ -21,6 +21,7 @@
     "mongoose": "^6.10.0",
     "mqtt": "^4.3.7",
     "nodemon": "^2.0.21",
-    "passport-jwt": "^4.0.1"
+    "passport-jwt": "^4.0.1",
+    "socket.io": "^4.6.1"
   }
 }
