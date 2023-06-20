@@ -2,16 +2,56 @@
   display: flex;
   justify-content: space-between;
   padding: 10px 20px;
-  border-bottom: 2px solid;
+  border-bottom: 2px solid #056678;
+
+  position: sticky;
+  top: 0;
+  background-color: white;
+  height: 60px;
+  z-index: 100; //stack navbar on top, so pages won't show when scrolled up
+
+  span {
+    font-size: 20px;
+  }
 
   .left {
+    margin-top: 10px;
+
+    .logo {
+      color: #056678;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 900;
+      font-size: 26px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: color 0.3s ease;
+
+    }
+
+    .logo:hover {
+      color: #034a53;
+    }
 
   }
 
   .right {
     display: flex;
-    gap: 20px;
+    margin-top: 5px;
     cursor: pointer;
 
+    .leftRight {
+      margin-left: 10px;
+    }
+
+    .MuiBadge-badge {
+      font-size: 15px;
+
+    }
+
+    .icon-cls {
+      width: 50px;
+      height: 30px;
+      margin-right: 10px;
+    }
   }
 }
