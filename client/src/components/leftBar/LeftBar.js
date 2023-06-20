@@ -1,6 +1,6 @@
 import "./leftBar.scss";
 import BatteryStatus from "../battery/BatteryStatus";
-
+import DroneMetrics from "../gps/DroneMetrics";
 const LeftBar = () => {
 
 
@@ -9,11 +9,11 @@ const LeftBar = () => {
             <div className="container">
                 <div className="item">
 
-                    <h3>connection</h3>
-                    <BatteryStatus/>
-
-                    <h3>altitude</h3>
-                    <h3>speed</h3>
+                    {/* <h3>connection</h3> */}
+                    <BatteryStatus />
+                    <DroneMetrics />
+                    {/* <h3>altitude</h3> */}
+                    {/* <h3>speed</h3> */}
                 </div>
 
 

@@ -1,11 +1,10 @@
 .leftBar {
   display: flex;
-  flex: 2;
-
-  //.horizontal-battery-icon {
-  //  display: inline-block;
-  //  transform: rotate(90deg);
-  //}
+  flex: 1;
+  justify-content: center;
+  // height: 100vh;
+  height: calc(100vh - 60px); //subtracts the height of the navbar from the viewport height
+  border-right: 1px solid #cccccc; //vertical line
 
   .container {
     padding: 20px;
