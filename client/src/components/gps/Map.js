@@ -1,39 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { GoogleMap, Marker, LoadScript } from "@react-google-maps/api";
+import { GoogleMap, Marker, LoadScript, InfoWindow } from "@react-google-maps/api";
 import { backendUrl } from "../../config";
+import './map.scss'
+
+import droneIcon from "./droneIcon2.png";
 
 const containerStyle = {
-    width: "100%",
-    height: "500px",
+    width: "60%",
+    height: "70vh",
 };
 
 const droneIdentifier = "test1";
 
 function Map() {
     const [gpsData, setGpsData] = useState(null);
+    const [showInfo, setShowInfo] = useState(false);
 
-    // useEffect(() => {
-    //     const intervalId = setInterval(async () => {
-    //         try {
-    //             const response = await axios.get(`${backendUrl}/gps/${droneIdentifier}`);
-    //             const data = response.data;
-    //             const { latitude, longitude, updatedAt } = data;
-    //
-    //             if (!gpsData || updatedAt > gpsData.updatedAt) {
-    //                 console.log("updating map");
-    //
-    //
-    //                 setGpsData(data);
-    //                 console.log(gpsData?.updatedAt);
-    //             }
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     }, 5000);
-    //
-    //     return () => clearInterval(intervalId);
-    // }, []);
     useEffect(() => {
         const fetchGpsData = async () => {
             try {
@@ -51,23 +34,69 @@ function Map() {
             }
         };
 
+        console.log(gpsData);
         fetchGpsData();
-    }, [gpsData]);
+    }, []);
+
+    // event handler to toggle the visibility of the InfoWindow
+    const handleMarkerClick = () => {
+        setShowInfo(!showInfo);
+    };
     return (
-        <div>
-            <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_API_KEY}>
-                {gpsData && (
-                    <GoogleMap
-                        mapContainerStyle={containerStyle}
-                        center={{ lat: gpsData.latitude, lng: gpsData.longitude }}
-                        zoom={15}
-                    >
-                        <Marker position={{ lat: gpsData.latitude, lng: gpsData.longitude }} />
-                    </GoogleMap>
-                )}
-            </LoadScript>
+        <div >
+            <div className="droneName">
+                <h1>
+                    {droneIdentifier}
+                </h1>
+            </div>
+
+            <div className="map">
+                <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAP_API_KEY}>
+                    {gpsData && (
+                        <>
+                            {console.log("Rendering GoogleMap", gpsData)}
+                            <GoogleMap
+                                mapContainerStyle={containerStyle}
+                                center={{ lat: gpsData.latitude, lng: gpsData.longitude }}
+                                zoom={17}
+                                mapTypeId="satellite"
+                            >
+                                {console.log("Rendering Marker", gpsData)}
+                                {/* <Marker
+                                    key={`${gpsData.latitude}-${gpsData.longitude}`}
+                                    position={{ lat: gpsData.latitude, lng: gpsData.longitude }}
+                                /> */}
+                                <Marker
+                                    position={{ lat: gpsData.latitude, lng: gpsData.longitude }} // set the position of the marker
+                                    title="Drone location" // set the title of the marker
+                                    icon={{
+                                        url: droneIcon,
+                                        scaledSize: new window.google.maps.Size(50, 50), // set the size of the icon
+                                    }}
+                                    animation={window.google.maps.Animation.BOUNCE} //BOUNCE or DROP animation 
+                                    onClick={handleMarkerClick} // add an onClick event handler to the marker
+                                >
+
+
+                                    {showInfo && ( // render the InfoWindow only if showInfo is true
+                                        <InfoWindow>
+                                            <div>
+                                                <h3>Drone location</h3>
+                                                <p>Latitude: {gpsData.latitude}</p>
+                                                <p>Longitude: {gpsData.longitude}</p>
+                                            </div>
+                                        </InfoWindow>
+                                    )}
+                                </Marker>
+
+                            </GoogleMap>
+                        </>
+                    )}
+                </LoadScript>
+            </div>
         </div>
     );
+
 }
 
 export default Map;
