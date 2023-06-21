@@ -74,6 +74,15 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
                 // console.log(batteryLevel);
                 io.emit('batteryUpdate', { droneIdentifier, batteryLevel }); //update battery status in real time
 
+                // Emit a notification event when the battery is getting low
+                if (batteryLevel <= 20) {
+                    io.emit('notificationEvent', {
+                        droneIdentifier,
+                        batteryLevel,
+                        message: `${droneIdentifier}'s battery level is getting low at ${batteryLevel}%`,
+                    });
+                }
+
             }
             //update temperature status
             else if (topicName === 'temperature') {
@@ -83,6 +92,15 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
                 // console.log(temperature);
                 //send real time update to client
                 io.emit('temperatureUpdate', { droneIdentifier, temperature }); //update temperature status in real time
+
+                // Emit a notification event if the temperature is over the threshold
+                if (temperature > 37) {
+                    io.emit('notificationEvent', {
+                        droneIdentifier,
+                        temperature,
+                        message: `${droneIdentifier}'s temperature is high at ${temperature} °C`,
+                    });
+                }
 
             }
 

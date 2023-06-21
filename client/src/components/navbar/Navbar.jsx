@@ -11,6 +11,7 @@ import Logout from '@mui/icons-material/Logout';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Settings from '@mui/icons-material/Settings';
 import Person from '@mui/icons-material/Person';
+import { NotificationContext } from '../../contextApi/NotificationContext';
 
 import "./navbar.scss";
 
@@ -19,7 +20,7 @@ const Navbar = () => {
     const [profileAnchorEl, setProfileAnchorEl] = useState(null);
     // const { logout } = useContext(AuthContext);
     //track number of notification
-    // const { notificationCount, notificationEvents, markAsRead, markAllAsRead } = useContext(NotificationContext);
+    const { notificationCount, notificationEvents, markAsRead, markAllAsRead } = useContext(NotificationContext);
     const navigate = useNavigate();
 
 
@@ -60,7 +61,7 @@ const Navbar = () => {
 
     //read invididual notification event
     const handleNotificationClick = (index) => {
-        // markAsRead(index);
+        markAsRead(index);
 
     };
 
@@ -77,7 +78,7 @@ const Navbar = () => {
             <div className="right">
 
                 <IconButton color="inherit" onClick={handleNotificationIconMenuClick}>
-                    <Badge badgeContent={1} color="primary" >
+                    <Badge badgeContent={notificationCount} color="primary" >
                         <NotificationsOutlinedIcon className="icon-cls" style={{ marginRight: "-9px" }} />
 
                     </Badge>
@@ -92,7 +93,7 @@ const Navbar = () => {
                 {/* Notifications menu */}
                 <Menu anchorEl={notificationAnchorEl} open={notificationOpen} onClose={handleClose}>
 
-                    {/* {notificationEvents.length > 0 ? (
+                    {notificationEvents.length > 0 ? (
                         [
                             notificationEvents.map((event, index) => (
                                 <MenuItem key={index} onClick={() => handleNotificationClick(index)}>
@@ -106,12 +107,12 @@ const Navbar = () => {
                                 <ListItemText secondary="Mark all as read" align="center" />
                             </MenuItem>
                         ]
-                    ) : ( */}
-                    <MenuItem disabled>
+                    ) : (
+                        <MenuItem disabled>
 
-                        <ListItemText primary="No notifications" />
-                    </MenuItem>
-                    {/* )} */}
+                            <ListItemText primary="No notifications" />
+                        </MenuItem>
+                    )}
                 </Menu>
 
 
