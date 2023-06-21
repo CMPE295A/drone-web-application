@@ -3,7 +3,7 @@ const router = express.Router();
 
 const {
     getLocation
-} = require('../controllers/gpsController')
+} = require('../controllers/gpsController');
 
 router.get('/:droneIdentifier', getLocation);
 module.exports = router;

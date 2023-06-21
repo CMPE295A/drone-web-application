@@ -13,7 +13,7 @@ const DroneMetrics = () => {
     const socket = useContext(SocketContext); //access socket.io connection
 
 
-    const droneIdentifier = "test1";
+    const droneIdentifier = "drone1";
 
     useEffect(() => {
 
@@ -45,7 +45,7 @@ const DroneMetrics = () => {
         //initial temperature level to display
         const getTemperatureLevel = async () => {
             try {
-                //get the battery level of the drone
+                //get the temperature level of the drone
                 const res = await axios.get(`${backendUrl}/temperature/${droneIdentifier}`);
                 // console.log(res);
                 setTemperature(res.data.temperature);
@@ -63,7 +63,7 @@ const DroneMetrics = () => {
         socket.on('temperatureUpdate', (data) => {
             // console.log(socket)
             // console.log(data);
-            if (data.droneIdentifier === 'test1') {
+            if (data.droneIdentifier === 'drone1') {
                 setTemperature(data.temperature);
             }
         });

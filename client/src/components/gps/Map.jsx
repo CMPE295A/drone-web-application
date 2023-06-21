@@ -17,7 +17,7 @@ function Map() {
     const [gpsData, setGpsData] = useState(null);
     const [showInfo, setShowInfo] = useState(false);
     const socket = useContext(SocketContext); //access socket.io connection
-    const droneIdentifier = "test1";
+    const droneIdentifier = "drone1";
 
     useEffect(() => {
         const fetchGpsData = async () => {
@@ -39,7 +39,7 @@ function Map() {
         socket.on('locationUpdate', (data) => {
             // console.log(socket)
             // console.log(data);
-            if (data.droneIdentifier === 'test1') {
+            if (data.droneIdentifier === 'drone1') {
                 const { latitude, longitude } = data; // extract latitude and longitude from data
                 const gps = { latitude, longitude }; // create a GPS object 
                 // console.log(gps);
@@ -59,9 +59,9 @@ function Map() {
     return (
         <div className="mapContainer" >
             <div className="droneName">
-                <h1>
+                <h2>
                     {droneIdentifier}
-                </h1>
+                </h2>
             </div>
 
             <div className="map">

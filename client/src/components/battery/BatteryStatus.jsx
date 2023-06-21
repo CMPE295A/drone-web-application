@@ -11,7 +11,7 @@ const BatteryStatus = () => {
     const socket = useContext(SocketContext); //access socket.io connection
 
 
-    const droneIdentifier = "test1";
+    const droneIdentifier = "drone1";
 
     useEffect(() => {
 
@@ -37,7 +37,7 @@ const BatteryStatus = () => {
         socket.on('batteryUpdate', (data) => {
             // console.log(socket)
             // console.log(data);
-            if (data.droneIdentifier === 'test1') {
+            if (data.droneIdentifier === 'drone1') {
                 setBatteryLevel(data.batteryLevel);
             }
         });
@@ -53,14 +53,13 @@ const BatteryStatus = () => {
         <div>
             {/* {error && <div>{error}</div>} */}
 
-            {batteryLevel !== null && (
-                <>
-                    <BatteryIcon percentage={batteryLevel} charging={false} />
-                    <div className={'batteryPercentage'}>
-                        {batteryLevel}%
-                    </div>
-                </>
-            )}
+
+            <BatteryIcon percentage={batteryLevel} charging={false} />
+            <div className={'batteryPercentage'}>
+                {batteryLevel}%
+            </div>
+
+
         </div>
     );
 }
