@@ -8,7 +8,7 @@ import droneIcon from "./droneIcon2.png";
 import { SocketContext } from '../../contextApi/SocketContext';
 
 const containerStyle = {
-    width: "60%",
+    width: "70%",
     height: "70vh",
 };
 
@@ -57,7 +57,7 @@ function Map() {
         setShowInfo(!showInfo);
     };
     return (
-        <div >
+        <div className="mapContainer" >
             <div className="droneName">
                 <h1>
                     {droneIdentifier}
