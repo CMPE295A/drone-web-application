@@ -4,11 +4,9 @@ services:
   backend:
     build: #builds the docker image locally
       context: ./server
-      dockerfile: Dockerfile #default
+      dockerfile: Dockerfile.prod 
     image: aj09/drone-nodejs
 #    platform: linux/arm64
-#    env_file:
-#      - ./server/.env #load external env file
     ports:
       - '3000:3000'
     environment:
@@ -18,11 +16,9 @@ services:
   frontend:
     build: #builds the docker image locally
       context: ./client
-      dockerfile: Dockerfile #default
+      dockerfile: Dockerfile.prod
     image: aj09/drone-react
-#    env_file:
-#      - ./client/.env #load external env file
     ports:
-      - '3002:3000'
+      - '80:80'
     environment:
       - NODE_ENV=production
