@@ -62,12 +62,14 @@ const droneRoute = require("./routes/drone");
 const userRoute = require("./routes/user");
 const gpsRoute = require("./routes/gps");
 const batteryRoute = require("./routes/battery");
+const temperatureRoute = require("./routes/temperature");
 
 
 app.use('/drone', droneRoute);
 app.use('/user', userRoute);
 app.use('/gps', gpsRoute);
 app.use('/battery', batteryRoute);
+app.use('/temperature', temperatureRoute);
 
 
 // Handle WebSocket connections
