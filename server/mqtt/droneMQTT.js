@@ -59,6 +59,10 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
             //update gps info
             else if (topicName === 'gps') {
                 await handleGPS(droneIdentifier, payload);
+
+                //update map location in real time using websocket
+                const { latitude, longitude } = payload;
+                io.emit('locationUpdate', { droneIdentifier, latitude, longitude });
             }
             //update battery status
             else if (topicName === 'battery') {
@@ -70,7 +74,7 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
                 io.emit('batteryUpdate', { droneIdentifier, batteryLevel }); //update battery status in real time
 
             }
-            //update the video data
+            //update the video data (TODO)
             else if (topicName === 'video') {
                 await handleVideo(droneIdentifier, payload);
             } else {

@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { GoogleMap, Marker, LoadScript, InfoWindow } from "@react-google-maps/api";
 import { backendUrl } from "../../config";
 import './map.scss'
 
 import droneIcon from "./droneIcon2.png";
+import { SocketContext } from '../../contextApi/SocketContext';
 
 const containerStyle = {
     width: "60%",
     height: "70vh",
 };
 
-const droneIdentifier = "test1";
 
 function Map() {
     const [gpsData, setGpsData] = useState(null);
     const [showInfo, setShowInfo] = useState(false);
+    const socket = useContext(SocketContext); //access socket.io connection
+    const droneIdentifier = "test1";
 
     useEffect(() => {
         const fetchGpsData = async () => {
@@ -34,7 +36,19 @@ function Map() {
             }
         };
 
-        console.log(gpsData);
+        socket.on('locationUpdate', (data) => {
+            // console.log(socket)
+            // console.log(data);
+            if (data.droneIdentifier === 'test1') {
+                const { latitude, longitude } = data; // extract latitude and longitude from data
+                const gps = { latitude, longitude }; // create a GPS object 
+                // console.log(gps);
+                setGpsData(gps);
+            }
+        });
+
+
+        // console.log(gpsData);
         fetchGpsData();
     }, []);
 
