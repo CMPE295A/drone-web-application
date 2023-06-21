@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  backend:
+    image: aj09/drone-nodejs-ec2
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+
+  frontend:
+    image: aj09/drone-react-ec2
+    ports:
+      - '80:80'
+    environment:
+      - NODE_ENV=production
