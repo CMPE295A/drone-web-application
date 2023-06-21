@@ -3,7 +3,7 @@ const { handleStatus } = require('../messageHandler/droneMessageHandler');
 const { handleGPS } = require('../messageHandler/gpsMessageHandler');
 const { handleBattery } = require("../messageHandler/batteryMessageHandler");
 const { handleVideo } = require("../messageHandler/videoMessageHandler");
-
+const { handleTemperature } = require('../messageHandler/tempMessageHandler');
 // const client = mqtt.connect('mqtt://localhost:1883'); //for mosquitto broker
 
 //AWS IoT endpoint
@@ -40,7 +40,8 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
         client.subscribe('drone/+/status');
         client.subscribe('drone/+/gps');
         client.subscribe('drone/+/battery');
-        client.subscribe('drone/+/video');
+        client.subscribe('drone/+/video'); //TODO
+        client.subscribe('drone/+/temperature');
     });
 
     //message handling
@@ -74,6 +75,17 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
                 io.emit('batteryUpdate', { droneIdentifier, batteryLevel }); //update battery status in real time
 
             }
+            //update temperature status
+            else if (topicName === 'temperature') {
+                // console.log('Parsed payload:', payload);
+                const temperature = payload.temperature;
+                await handleTemperature(droneIdentifier, payload);
+                // console.log(temperature);
+                //send real time update to client
+                io.emit('temperatureUpdate', { droneIdentifier, temperature }); //update temperature status in real time
+
+            }
+
             //update the video data (TODO)
             else if (topicName === 'video') {
                 await handleVideo(droneIdentifier, payload);
