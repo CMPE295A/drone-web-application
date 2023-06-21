@@ -11,6 +11,7 @@ import Main from "./pages/Main"
 import LeftBar from "./components/leftBar/LeftBar";
 import Map from "./components/gps/Map";
 import Login from "./pages/Login/Login";
+import Footer from "./components/footer/Footer";
 const App = () => {
 
   const Layout = () => {
@@ -26,6 +27,7 @@ const App = () => {
           <div style={{ flex: 6 }}>
             {/* nested routes inside root route */}
             <Outlet />
+            <Footer />
           </div>
         </div>
 
