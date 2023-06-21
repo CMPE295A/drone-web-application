@@ -12,6 +12,10 @@ import LeftBar from "./components/leftBar/LeftBar";
 import Map from "./components/gps/Map";
 import Login from "./pages/Login/Login";
 import Footer from "./components/footer/Footer";
+import { useContext } from "react";
+import { AuthContext } from "./contextApi/AuthContext";
+
+
 const App = () => {
 
   const Layout = () => {
@@ -41,12 +45,12 @@ const App = () => {
 
   //client-sidew auth
   const ProtectedRoute = ({ children }) => {
-    // const { currentUser } = useContext(AuthContext);
+    const { currentUser } = useContext(AuthContext);
 
-    // if (!currentUser) {
-    //   console.log('Not CURRENT USER: ' + currentUser);
-    //   return <Navigate to="/login" />;
-    // }
+    if (!currentUser) {
+      console.log('Not CURRENT USER: ' + currentUser);
+      return <Navigate to="/login" />;
+    }
 
 
     return children;

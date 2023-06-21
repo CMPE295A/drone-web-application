@@ -12,13 +12,13 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Settings from '@mui/icons-material/Settings';
 import Person from '@mui/icons-material/Person';
 import { NotificationContext } from '../../contextApi/NotificationContext';
-
+import { AuthContext } from "../../contextApi/AuthContext";
 import "./navbar.scss";
 
 const Navbar = () => {
     const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
     const [profileAnchorEl, setProfileAnchorEl] = useState(null);
-    // const { logout } = useContext(AuthContext);
+    const { logout } = useContext(AuthContext);
     //track number of notification
     const { notificationCount, notificationEvents, markAsRead, markAllAsRead } = useContext(NotificationContext);
     const navigate = useNavigate();
@@ -45,7 +45,7 @@ const Navbar = () => {
 
     const handleLogout = () => {
         handleClose();
-        // logout();
+        logout();
     };
 
     const handleProfile = () => {
