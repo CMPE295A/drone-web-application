@@ -6,6 +6,10 @@
     bottom: 0;
     height: 80px;
     // height: calc(100vh - 60px);
+    // position: absolute;
+    position: fixed; //set footer to fixed position at the bottom of the viewport
+    left: calc(100% * 1/7); //Adjust to sidebar's width
+    right: 0;
 
     .container {
         width: 100%;
