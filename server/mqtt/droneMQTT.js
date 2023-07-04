@@ -28,6 +28,11 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
         key: privateKey,
     });
 
+    client.on('error', (err) => {
+        console.error('AWS IoT Core Connection Failed:', err.message);
+        process.exit(1); // Exits with a failure code
+    });
+
     // connect to broker (network that receives messages and sends to subscribers)
     client.on('connect', () => {
         // console.log('Connected to MQTT broker');

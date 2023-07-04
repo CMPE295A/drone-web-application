@@ -7,15 +7,17 @@ const http = require('http').Server(app); //create http server
 const io = require('socket.io')(http, {
     //handle websocket connection
     cors: {
-        origin: [process.env.frontendURL, "http://localhost:4000"],
+        // origin: [process.env.frontendURL, "http://localhost:4000"],
+        origin: "*"
     }
 });
 
 const cors = require('cors'); //allows all cross-origin requests to access the resources
 app.use(cors({
     //handle http API request
-    origin: [process.env.frontendURL, "http://localhost:4000"],
+    // origin: [process.env.frontendURL, "http://localhost:4000"],
     // credentials: true
+    origin: "*"
 }));
 
 
@@ -51,6 +53,7 @@ mongoose.connect(mongoDB, options, (err) => {
     if (err) {
         console.log(err);
         console.log('MongoDB Connection Failed');
+        process.exit(1); // Exits with a failure code
     } else {
         console.log('MongoDB Connected');
     }
