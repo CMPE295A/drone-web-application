@@ -14,6 +14,7 @@ import Login from "./pages/Login/Login";
 import Footer from "./components/footer/Footer";
 import { useContext } from "react";
 import { AuthContext } from "./contextApi/AuthContext";
+import BatteryChart from './components/battery/BatteryChart';
 
 
 const App = () => {
@@ -47,10 +48,10 @@ const App = () => {
   const ProtectedRoute = ({ children }) => {
     const { currentUser } = useContext(AuthContext);
 
-    if (!currentUser) {
-      console.log('Not CURRENT USER: ' + currentUser);
-      return <Navigate to="/login" />;
-    }
+    // if (!currentUser) {
+    //   console.log('Not CURRENT USER: ' + currentUser);
+    //   return <Navigate to="/login" />;
+    // }
 
 
     return children;
@@ -71,6 +72,11 @@ const App = () => {
         {
           path: "/",
           element: <Map />,
+        },
+
+        {
+          path: "/battery",
+          element: <BatteryChart />,
         },
 
       ],
