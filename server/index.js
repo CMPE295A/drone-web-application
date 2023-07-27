@@ -28,6 +28,9 @@ app.use(express.urlencoded({ extended: true })); //parse incoming request bodies
 app.use(express.json()); // parse request bodies that are in JSON format.
 
 const port = 3000;
+//test
+generateKeyPair();
+
 
 //MQTT client starts when the web application starts
 require('./mqtt/droneMQTT')(io); //pass 'io' object to the MQTT client module using dependency injection
@@ -36,8 +39,6 @@ require('./mqtt/droneMQTT')(io); //pass 'io' object to the MQTT client module us
 // const mqttClient = require('./mqtt/droneMQTT');
 
 
-//test
-generateKeyPair();
 
 
 
