@@ -4,6 +4,7 @@ const { handleGPS } = require('../messageHandler/gpsMessageHandler');
 const { handleBattery } = require("../messageHandler/batteryMessageHandler");
 const { handleVideo } = require("../messageHandler/videoMessageHandler");
 const { handleTemperature } = require('../messageHandler/tempMessageHandler');
+const { getSecretKey } = require('../messageHandler/keyMessageHandler');
 // const client = mqtt.connect('mqtt://localhost:1883'); //for mosquitto broker
 
 //AWS IoT endpoint
@@ -50,6 +51,7 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
         client.subscribe('drone/+/battery');
         client.subscribe('drone/+/video'); //TODO
         client.subscribe('drone/+/temperature');
+        client.subscribe('mcu/secretKey');
         // client.subscribe('server/publicKey'); //for testing
 
         // publish the server's public key to MCU
@@ -115,6 +117,12 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
                     });
                 }
 
+            }
+
+            //store the secret key from MCU for decryption
+            else if (topic === 'mcu/secretKey') {
+                console.log(payload.message);
+                await getSecretKey(payload.message);
             }
 
             // //test if public key is published

@@ -25,4 +25,18 @@ const generateKeyPair = () => {
     fs.writeFileSync('privateKey.pem', privateKeyHex);
 }
 
-module.exports = { generateKeyPair }
+
+//get secret from MCU
+const getSecretKey = (secret) => {
+    try {
+        //store secret key to .pem file
+        fs.writeFileSync('secretKey.pem', secret);
+    } catch (err) {
+        console.error('Error storing the secret key:', err);
+    }
+}
+
+module.exports = {
+    generateKeyPair,
+    getSecretKey
+}
