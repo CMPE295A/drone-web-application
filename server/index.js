@@ -2,6 +2,9 @@ require('dotenv').config();
 const express = require('express'); //express module
 const app = express(); // create an express app
 
+//for testing
+const { generateKeyPair } = require('./messageHandler/keyMessageHandler'); //test key generation
+
 //create a Socket.IO server for websocket and attach to http server
 const http = require('http').Server(app); //create http server
 const io = require('socket.io')(http, {
@@ -33,7 +36,8 @@ require('./mqtt/droneMQTT')(io); //pass 'io' object to the MQTT client module us
 // const mqttClient = require('./mqtt/droneMQTT');
 
 
-
+//test
+generateKeyPair();
 
 
 
