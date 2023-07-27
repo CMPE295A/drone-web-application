@@ -16,6 +16,9 @@ const fs = require('fs');
 const certificate = fs.readFileSync(certificatePath);
 const privateKey = fs.readFileSync(privateKeyPath);
 
+//load server's public key
+const serverPublicKey = fs.readFileSync('./publicKey.pem');
+
 
 //set up the MQTT client with a Socket.IO server object as a parameter
 const mqttClient = (io) => { //inject dependency 'io' object from index.js
@@ -47,6 +50,11 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
         client.subscribe('drone/+/battery');
         client.subscribe('drone/+/video'); //TODO
         client.subscribe('drone/+/temperature');
+        // client.subscribe('server/publicKey'); //for testing
+
+        // publish the server's public key to MCU
+        client.publish('server/publicKey', serverPublicKey); //'server/publicKey' topic
+
     });
 
     //message handling
@@ -108,6 +116,12 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
                 }
 
             }
+
+            // //test if public key is published
+            // else if (topic === 'server/publicKey') {
+            //     console.log('Received message on server/publicKey: ', payload);
+            // }
+
 
             //update the video data (TODO)
             else if (topicName === 'video') {
