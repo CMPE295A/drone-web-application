@@ -5,6 +5,8 @@ const { handleBattery } = require("../messageHandler/batteryMessageHandler");
 const { handleVideo } = require("../messageHandler/videoMessageHandler");
 const { handleTemperature } = require('../messageHandler/tempMessageHandler');
 const { getSecretKey } = require('../messageHandler/keyMessageHandler');
+const { decryptMessage } = require('../messageHandler/decryptMessageHandler');
+
 // const client = mqtt.connect('mqtt://localhost:1883'); //for mosquitto broker
 
 //AWS IoT endpoint
@@ -85,9 +87,12 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
                 // console.log('Parsed payload:', payload);
                 // console.log('Type of batteryLevel:', typeof payload);
                 const batteryLevel = payload.batteryLevel;
-                await handleBattery(droneIdentifier, payload);
-                // console.log(batteryLevel);
-                io.emit('batteryUpdate', { droneIdentifier, batteryLevel }); //update battery status in real time
+
+                //decrypt data
+                const decryptedMessage =  decryptMessage(batteryLevel);
+                await handleBattery(droneIdentifier, decryptedMessage);
+                // console.log(decryptedMessage);
+                io.emit('batteryUpdate', { droneIdentifier, batteryLevel: decryptedMessage }); //update battery status in real time
 
                 // Emit a notification event when the battery is getting low
                 if (batteryLevel <= 20) {
