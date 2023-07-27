@@ -13,16 +13,16 @@ const generateKeyPair = () => {
     //get generated private key
     const privateKey = ecdh.getPrivateKey();
 
-    // Convert keys to base64 strings
-    const publicKeyBase64 = publicKey.toString('base64');
-    const privateKeyBase64 = privateKey.toString('base64');
+    // Convert keys to hex
+    const publicKeyHex = publicKey.toString('hex');
+    const privateKeyHex = privateKey.toString('hex');
 
-    console.log('Public key: ', publicKeyBase64);
-    console.log('Private key: ', privateKeyBase64);
+    console.log('Public key: ', publicKeyHex);
+    console.log('Private key: ', privateKeyHex);
 
     // Write keys to pem files
-    fs.writeFileSync('publicKey.pem', publicKeyBase64);
-    fs.writeFileSync('privateKey.pem', privateKeyBase64);
+    fs.writeFileSync('publicKey.pem', publicKeyHex);
+    fs.writeFileSync('privateKey.pem', privateKeyHex);
 }
 
 module.exports = { generateKeyPair }
