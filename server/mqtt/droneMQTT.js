@@ -20,8 +20,12 @@ const certificate = fs.readFileSync(certificatePath);
 const privateKey = fs.readFileSync(privateKeyPath);
 
 //load server's public key
-const serverPublicKey = fs.readFileSync('./publicKey.pem');
+const serverPublicKey = fs.readFileSync('./publicKey.pem', 'utf8'); // in hex string
 
+const sharedSecret = fs.readFileSync('./sharedSecret.pem'); //in buffer
+
+
+// let sharedSecretKey;  // store shared secret in-memory?
 
 //set up the MQTT client with a Socket.IO server object as a parameter
 const mqttClient = (io) => { //inject dependency 'io' object from index.js
@@ -29,7 +33,7 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
     const client = mqtt.connect({
         host: endpoint,
         port: 8883,
-        protocol: 'mqtts', //secure
+        protocol: 'mqtts', // secure TLS communication
         cert: certificate,
         key: privateKey,
     });
@@ -54,10 +58,13 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
         client.subscribe('drone/+/video'); //TODO
         client.subscribe('drone/+/temperature');
         client.subscribe('mcu/secretKey');
+        client.subscribe('mcu/publicKey');
         // client.subscribe('server/publicKey'); //for testing
 
         // publish the server's public key to MCU
-        client.publish('server/publicKey', serverPublicKey); //'server/publicKey' topic
+        // const payload = JSON.stringify({ publicKey: serverPublicKey }); //convert to JSON, not good for mcu?
+        client.publish('server/publicKey', serverPublicKey); // 'server/publicKey' topic
+        client.publish('server/secretKey', sharedSecret); // shared secret from server
 
     });
 
@@ -89,7 +96,7 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
                 const batteryLevel = payload.batteryLevel;
 
                 //decrypt data
-                const decryptedMessage =  decryptMessage(batteryLevel);
+                const decryptedMessage = decryptMessage(batteryLevel);
                 await handleBattery(droneIdentifier, decryptedMessage);
                 // console.log(decryptedMessage);
                 io.emit('batteryUpdate', { droneIdentifier, batteryLevel: decryptedMessage }); //update battery status in real time
@@ -129,7 +136,11 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
                 console.log(payload.message);
                 await getSecretKey(payload.message);
             }
-
+            //generate shared secret using mcu public key; stored in file
+            else if (topic === 'mcu/publicKey') {
+                console.log(payload.message);
+                await generateSharedSecret(payload.message);
+            }
             // //test if public key is published
             // else if (topic === 'server/publicKey') {
             //     console.log('Received message on server/publicKey: ', payload);
