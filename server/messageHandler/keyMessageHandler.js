@@ -13,16 +13,22 @@ const generateKeyPair = () => {
     //get generated private key
     const privateKey = ecdh.getPrivateKey();
 
-    // Convert keys to hex
-    const publicKeyHex = publicKey.toString('hex');
-    const privateKeyHex = privateKey.toString('hex');
+    // // Convert keys to hex
+    // const publicKeyHex = publicKey.toString('hex');
+    // const privateKeyHex = privateKey.toString('hex');
 
-    console.log('Public key: ', publicKeyHex);
-    console.log('Private key: ', privateKeyHex);
+    // console.log('Public key: ', publicKeyHex);
+    // console.log('Private key: ', privateKeyHex);
+
+    console.log('Buffer Public key: ', publicKey);
+    console.log('Buffer Private key: ', privateKey);
+
 
     // Write keys to pem files
-    fs.writeFileSync('publicKey.pem', publicKeyHex);
-    fs.writeFileSync('privateKey.pem', privateKeyHex);
+    fs.writeFileSync('publicKey.pem', publicKey);
+    fs.writeFileSync('privateKey.pem', privateKey);
+
+
 }
 
 
