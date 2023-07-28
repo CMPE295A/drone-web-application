@@ -17,12 +17,16 @@ const generateKeyPair = () => {
     const publicKeyHex = publicKey.toString('hex');
     const privateKeyHex = privateKey.toString('hex');
 
-    // console.log('Public key: ', publicKeyHex);
-    // console.log('Private key: ', privateKeyHex);
+    console.log('Public key: ', publicKeyHex);
+    console.log('Private key: ', privateKeyHex);
 
-    console.log('Buffer Public key: ', publicKey);
-    console.log('Buffer Private key: ', privateKey);
+    // console.log('Buffer Public key: ', publicKey);
+    // console.log('Buffer Private key: ', privateKey);
 
+    //ignore 04 prefix (indicates the key is in uncompressed form) 
+    const rawPublicKey = publicKey.slice(1);
+    const rawPublicKeyHex = rawPublicKey.toString('hex');
+    console.log('Raw Public key: ', rawPublicKeyHex);
 
     // Write keys to pem files
     fs.writeFileSync('publicKey.pem', publicKeyHex);
