@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 
-const generateKeyPair = () => {
+const generateKeyPair = async () => {
 
     //elliptic curve diffie-hellman
     const ecdh = crypto.createECDH('secp256k1'); //https://nodejs.org/api/crypto.html#cryptocreateecdhcurvename
@@ -37,7 +37,7 @@ const generateKeyPair = () => {
 
 
 //get shared secret from MCU
-const getSecretKey = (secret) => {
+const getSecretKey = async (secret) => {
     try {
         //store secret key to .pem file
         fs.writeFileSync('secretKey.pem', secret);
@@ -48,7 +48,7 @@ const getSecretKey = (secret) => {
 
 
 //generate the shared secret using mcu public key and server's private key
-const generateSharedSecret = (publicKey) => { //public key is hex
+const generateSharedSecret = async (publicKey) => { //public key is hex
     // elliptic curve diffie-hellman
     const ecdh = crypto.createECDH('secp256k1');
 
