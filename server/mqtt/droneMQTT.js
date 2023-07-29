@@ -62,9 +62,14 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
         // client.subscribe('server/publicKey'); //for testing
 
         // publish the server's public key to MCU
-        // const payload = JSON.stringify({ publicKey: serverPublicKey }); //convert to JSON, not good for mcu?
-        client.publish('server/publicKey', serverPublicKey); // 'server/publicKey' topic
-        client.publish('server/secretKey', sharedSecret); // shared secret from server
+        // const payload = JSON.stringify({ publicKey: serverPublicKey }); //convert to JSON, not feasable for mcu?
+        client.publish('server/publicKey', serverPublicKey, { retain: true }, () => { // 'server/publicKey' topic
+            console.log("server's public key is published");
+            // client.end(); // Close the connection when published
+        });
+        client.publish('server/secretKey', sharedSecret, { retain: true }, () => { // shared secret from server
+            console.log("server generated shared secret is published");
+        });
 
     });
 
