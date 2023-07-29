@@ -2,6 +2,11 @@ const crypto = require('crypto');
 const fs = require('fs');
 
 const generateKeyPair = async () => {
+    // check if keys already exist in the server
+    if (fs.existsSync('publicKey.pem') && fs.existsSync('privateKey.pem')) {
+        console.log('Keys already exist');
+        return;
+    } //else generate new ones
 
     //elliptic curve diffie-hellman
     const ecdh = crypto.createECDH('secp256k1'); //https://nodejs.org/api/crypto.html#cryptocreateecdhcurvename
@@ -39,6 +44,11 @@ const generateKeyPair = async () => {
 //get shared secret from MCU
 const getSecretKey = async (secret) => {
     try {
+        // // Check if secret key already exists
+        // if (fs.existsSync('secretKey.pem')) {
+        //     return;
+        // }
+        
         //store secret key to .pem file
         fs.writeFileSync('secretKey.pem', secret);
     } catch (err) {
@@ -49,6 +59,13 @@ const getSecretKey = async (secret) => {
 
 //generate the shared secret using mcu public key and server's private key
 const generateSharedSecret = async (publicKey) => { //public key is hex
+    // check if shared secret already in the server
+    if (fs.existsSync('sharedSecret.pem')) {
+        console.log('Shared secret already exists');
+        return;
+    } //else generate new one
+
+
     // elliptic curve diffie-hellman
     const ecdh = crypto.createECDH('secp256k1');
 
