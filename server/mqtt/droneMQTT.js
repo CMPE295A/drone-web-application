@@ -55,8 +55,11 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
         client.subscribe('drone/+/status');
         client.subscribe('drone/+/gps');
         client.subscribe('drone/+/battery');
-        client.subscribe('drone/+/video'); //TODO
         client.subscribe('drone/+/temperature');
+        client.subscribe('drone/+/video'); //TODO
+
+
+        //keys from mcu
         client.subscribe('mcu/secretKey');
         client.subscribe('mcu/publicKey');
         // client.subscribe('server/publicKey'); //for testing
@@ -81,6 +84,7 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
 
         try {
             const payload = JSON.parse(message.toString()); //convert JSON to object
+            // const payload = message;
 
             //update drone status
             if (topicName === 'status') {
@@ -90,21 +94,29 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
             else if (topicName === 'gps') {
                 await handleGPS(droneIdentifier, payload);
 
-                //update map location in real time using websocket
+                //update map location in real-time using websocket
                 const { latitude, longitude } = payload;
                 io.emit('locationUpdate', { droneIdentifier, latitude, longitude });
             }
             //update battery status
             else if (topicName === 'battery') {
-                // console.log('Parsed payload:', payload);
+                console.log('Parsed payload:', payload);
                 // console.log('Type of batteryLevel:', typeof payload);
                 const batteryLevel = payload.batteryLevel;
 
                 //decrypt data
-                const decryptedMessage = decryptMessage(batteryLevel);
+                let decryptedMessage = decryptMessage(batteryLevel);
+                console.log(decryptedMessage);
+
+                // convert encrypted batteryLevel back into a number
+                decryptedMessage = parseInt(decryptedMessage, 10);
+
+                //store in mongodb
                 await handleBattery(droneIdentifier, decryptedMessage);
                 // console.log(decryptedMessage);
-                io.emit('batteryUpdate', { droneIdentifier, batteryLevel: decryptedMessage }); //update battery status in real time
+
+                //update battery status in real-time on the webpage
+                io.emit('batteryUpdate', { droneIdentifier, batteryLevel: decryptedMessage }); 
 
                 // Emit a notification event when the battery is getting low
                 if (batteryLevel <= 20) {

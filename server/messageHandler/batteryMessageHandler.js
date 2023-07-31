@@ -5,7 +5,9 @@ const batteryModel = require('../models/batteryModel');
 const handleBattery = async (droneIdentifier, message) => {
     try {
         // process the message to determine which drone's battery is low
-        const batteryLevel = message.batteryLevel;
+        // const batteryLevel = message.batteryLevel;
+        const batteryLevel = message;
+
         console.log('Type of batteryLevel:', typeof batteryLevel);
 
         // Validate the data
