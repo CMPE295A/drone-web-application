@@ -12,15 +12,15 @@ const decryptMessage = (encryptedMessage) => {
 
     // const secretKeyHex = Buffer.from(secretKey, 'hex'); //convert hex to Buffer
 
-    console.log('Decrypt shared secret in buffer format: ' + secretKey);
+    console.log('(Decrypt) Shared secret used in buffer format: ' + secretKey);
     // console.log('Decrypt shared secret in hex format: ' + secretKeyHex);
 
     //secret must be in Buffer format
     let decipher = crypto.createDecipheriv(algorithm, secretKey, iv); //https://nodejs.org/api/crypto.html#cryptocreatedecipherivalgorithm-key-iv-options
-    let decrypted = decipher.update(encryptedMessage, 'utf8'); //input buffer, output utf8
-    // let decrypted = decipher.update(encryptedMessage, 'hex', 'utf8'); //input hex, output utf8
+    // let decrypted = decipher.update(encryptedMessage, 'utf8'); //input buffer, output utf8
+    let decrypted = decipher.update(encryptedMessage, 'hex', 'utf8'); //input hex, output utf8
 
-    //return any remaining decrypted data
+    //return any remaining decrypted data in string
     decrypted += decipher.final('utf8');
 
 

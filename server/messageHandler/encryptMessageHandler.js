@@ -21,8 +21,11 @@ const encryptMessage = (message) => {
 
     // const secretKeyHex = Buffer.from(secretKey, 'hex'); //convert hex to Buffer if getting hex 
 
+    //not used, just for reading
+    const secretKeyHex = secretKey.toString('hex'); //convert Buffer to hex string (to be readable)
+
     console.log('shared secret in buffer format: ' + secretKey);
-    // console.log('shared secret in hex format: ' + secretKeyHex);
+    console.log('shared secret in hex format: ' + secretKeyHex);
 
 
 
@@ -33,9 +36,10 @@ const encryptMessage = (message) => {
     // Return any remaining encrypted data
     encrypted = Buffer.concat([encrypted, cipher.final()]); // Encrypted message 
     console.log('encrypted data: ' + encrypted); //output in buffer format
-    // console.log('encrypted data: ', encrypted.toString('hex')); 
+    console.log('encrypted data in hex: ', encrypted.toString('hex'));
 
-    return encrypted;
+    // return encrypted;
+    return encrypted.toString('hex');
 }
 
 module.exports = {
