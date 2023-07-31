@@ -11,14 +11,15 @@ const getBattery = async (req, res) => {
         if (!droneId) {
             return res.status(404).json({ message: "droneIdentifier not found" });
         }
-        const battery = await batteryModel.findOne({ droneIdentifier: droneId }).sort({ timestamp: -1 });
+        const battery = await batteryModel.findOne({ droneIdentifier: droneId }).sort({ updatedAt: -1 });
 
         // console.log(battery);
-        if (batteryHistory.length === 0) {
+        if (battery.length === 0) {
             return res.status(404).json({ message: "battery level not found" });
         }
         res.json(battery);
     } catch (err) {
+        console.log(err);
         res.status(500).json({ message: err.message });
     }
 
