@@ -5,7 +5,7 @@ const { handleBattery } = require("../messageHandler/batteryMessageHandler");
 const { handleVideo } = require("../messageHandler/videoMessageHandler");
 const { handleTemperature } = require('../messageHandler/tempMessageHandler');
 const { getSecretKey } = require('../messageHandler/keyMessageHandler');
-const { decryptMessage } = require('../messageHandler/decryptMessageHandler');
+// const { decryptMessage } = require('../messageHandler/decryptMessageHandler');
 
 // const client = mqtt.connect('mqtt://localhost:1883'); //for mosquitto broker
 
@@ -29,6 +29,14 @@ const sharedSecret = fs.readFileSync('./sharedSecret.pem'); //in buffer
 
 //set up the MQTT client with a Socket.IO server object as a parameter
 const mqttClient = (io) => { //inject dependency 'io' object from index.js
+
+    //initialize message handler functions with 'io' instance for real-time updates
+    const addBattery = handleBattery(io);
+    const addGPS = handleGPS(io);
+    const addTemperature = handleTemperature(io);
+    const addStatus = handleStatus(io);
+
+
     // Connect to the AWS IoT broker using MQTT
     const client = mqtt.connect({
         host: endpoint,
@@ -58,7 +66,6 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
         client.subscribe('drone/+/temperature');
         client.subscribe('drone/+/video'); //TODO
 
-
         //keys from mcu
         client.subscribe('mcu/secretKey');
         client.subscribe('mcu/publicKey');
@@ -84,68 +91,33 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
 
         try {
             const payload = JSON.parse(message.toString()); //convert JSON to object
+            console.log('Parsed payload:', payload);
             // const payload = message;
+
 
             //update drone status
             if (topicName === 'status') {
-                await handleStatus(droneIdentifier, payload);
+
+                //decrypt drone's status, display real-time updates
+                await addStatus(droneIdentifier, payload);
             }
             //update gps info
             else if (topicName === 'gps') {
-                await handleGPS(droneIdentifier, payload);
 
-                //update map location in real-time using websocket
-                const { latitude, longitude } = payload;
-                io.emit('locationUpdate', { droneIdentifier, latitude, longitude });
+                //decrypt and store gps data, display real-time updates
+                await addGPS(droneIdentifier, payload);
             }
             //update battery status
             else if (topicName === 'battery') {
-                console.log('Parsed payload:', payload);
-                // console.log('Type of batteryLevel:', typeof payload);
-                const batteryLevel = payload.batteryLevel;
 
-                //decrypt data
-                let decryptedMessage = decryptMessage(batteryLevel);
-                console.log(decryptedMessage);
-
-                // convert encrypted batteryLevel back into a number
-                decryptedMessage = parseInt(decryptedMessage, 10);
-
-                //store in mongodb
-                await handleBattery(droneIdentifier, decryptedMessage);
-                // console.log(decryptedMessage);
-
-                //update battery status in real-time on the webpage
-                io.emit('batteryUpdate', { droneIdentifier, batteryLevel: decryptedMessage }); 
-
-                // Emit a notification event when the battery is getting low
-                if (batteryLevel <= 20) {
-                    io.emit('notificationEvent', {
-                        droneIdentifier,
-                        batteryLevel,
-                        message: `${droneIdentifier}'s battery level is getting low at ${batteryLevel}%`,
-                    });
-                }
-
+                //decrypt and store battery data, display real-time updates
+                await addBattery(droneIdentifier, payload);
             }
             //update temperature status
             else if (topicName === 'temperature') {
-                // console.log('Parsed payload:', payload);
-                const temperature = payload.temperature;
-                await handleTemperature(droneIdentifier, payload);
-                // console.log(temperature);
-                //send real time update to client
-                io.emit('temperatureUpdate', { droneIdentifier, temperature }); //update temperature status in real time
 
-                // Emit a notification event if the temperature is over the threshold
-                if (temperature > 37) {
-                    io.emit('notificationEvent', {
-                        droneIdentifier,
-                        temperature,
-                        message: `${droneIdentifier}'s temperature is high at ${temperature} °C`,
-                    });
-                }
-
+                //decrypt and store temperature data, display real-time update
+                await addTemperature(droneIdentifier, payload);
             }
 
             //store the secret key from MCU for decryption
