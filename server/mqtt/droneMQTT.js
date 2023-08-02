@@ -65,6 +65,7 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
         client.subscribe('drone/+/battery');
         client.subscribe('drone/+/temperature');
         client.subscribe('drone/+/video'); //TODO
+        client.subscribe('drone/+/data');
 
         //keys from mcu
         client.subscribe('mcu/secretKey');
@@ -95,8 +96,32 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
             // const payload = message;
 
 
+            //using a single topic for all drone data
+            if (topicName === 'data') {
+
+                const { status, gps, batteryLevel, temperature } = payload;
+
+                if (status) {
+                    //decrypt drone's status, display real-time updates
+                    await addStatus(droneIdentifier, { status });
+                }
+                if (gps) {
+                    //decrypt and store gps data, display real-time updates
+                    await addGPS(droneIdentifier, gps);
+                }
+                if (batteryLevel) {
+
+                    //decrypt and store battery data, display real-time updates
+                    await addBattery(droneIdentifier, { batteryLevel });
+                }
+                if (temperature) {
+                    //decrypt and store temperature data, display real-time update
+                    await addTemperature(droneIdentifier, { temperature });
+                }
+            }
+
             //update drone status
-            if (topicName === 'status') {
+            else if (topicName === 'status') {
 
                 //decrypt drone's status, display real-time updates
                 await addStatus(droneIdentifier, payload);
