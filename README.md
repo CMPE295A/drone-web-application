@@ -1,3 +1,14 @@
+# Drone Web Application
+
+## Table of Contents
+- [How to run locally](#how-to-run-locally)
+- [How to run app using Docker images from DockerHub](#how-to-run-app-using-docker-images-from-dockerhub)
+- [How to run using Docker compose](#how-to-run-using-docker-compose)
+- [How to sign in as IAM user to the AWS Management Console](#how-to-sign-in-as-iam-user-to-the-aws-management-console)
+- [How to connect to AWS IoT core](#how-to-connect-to-aws-iot-core)
+
+
+
 ## How to run locally
 1. Clone the repository:
  ```shell
