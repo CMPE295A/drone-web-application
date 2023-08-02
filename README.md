@@ -1,15 +1,45 @@
-## How to run 
-1. git clone repo
-2. cd server
-3. npm install
-4. create .env file in server folder
-5. Add MONGODB_URL= < your mongodb > to .env file <br> 
-  or use mine: MONGODB_URL=mongodb+srv://ajDroneDB:5HSmZCo759tuFTCF@drone.l9ts6iz.mongodb.net/?retryWrites=true&w=majority
-6. nodemon index.js
-7. cd client
-8. npm install
-9. npm start
+## How to run locally
+1. Clone the repository:
+ ```shell
+git clone https://github.com/CMPE295A/drone-web-application
+ ```
+2. Install dependencies for the client and server:
+```shell
+cd client
+npm install
+cd server
+npm install
+```
+3. Setup the environment variables:
+- Create a `.env` file in the server directory:
+    - `MONGODB_URL` = ... 
+    - `JWT_SECRET` = ... 
+    - `AWS_CERTIFICATE_PATH` = ... 
+    - `AWS_PRIVATE_KEY_PATH` = ... 
+    - `AWS_IOT_HOST_ENDPOINT` = ... 
+- Create a .env file in the client directory:
+    - `REACT_APP_GOOGLE_MAP_API_KEY` = ... 
+4. Run the client & server in separate terminals:
+```shell
+cd client && npm start
+cd server && nodemon index.js
+```
+5. Navigate to http://localhost:4000 in your browser.
 
+
+## How to run using Docker compose
+1. Install Docker & Docker-Compose: https://docs.docker.com/get-docker/ & https://docs.docker.com/compose/install/
+2. Clone the repository: git clone https://github.com/CMPE295A/drone-web-application
+3. Open terminal and navigate to the project root directory. Ex: cd ~/Desktop/drone-web-application
+4. To start the containers: docker-compose up
+5. To stop the containers: docker-compose down
+
+
+## How to sign in as IAM user to the AWS Management Console
+1. Go to https://820446012843.signin.aws.amazon.com/console
+2. Enter 'drone' as username and the provided password
+3. Under the 'Services' or search bar, look for "IoT Core"
+4. Go to MQTT test client to test pub/sub topics
 
 ## How to connect to AWS IoT core
 1. Create an AWS IoT thing (Manage -> All Devices -> Things)
@@ -24,9 +54,3 @@
 4. Configure the MQTT client in your code using the Host endpoint and port along with your certificate and keys
 5. Test using subscribe/publish to a topic on AWS IoT MQTT test client
 
-## How to run using Docker compose
-1. Install Docker: https://docs.docker.com/get-docker/
-2. Clone the repository: git clone https://github.com/CMPE295A/drone-web-application
-3. Open terminal and navigate to the project directory. Ex: cd ~/Desktop/drone-web-application
-4. To start the containers: docker-compose up
-5. To stop the containers: docker-compose down
