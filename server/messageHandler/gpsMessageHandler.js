@@ -31,7 +31,7 @@ const handleGPS = (io) => async (droneIdentifier, encryptedMessage) => {//higher
             { new: true, upsert: true } // update if document exists, create a new one if not
         );
 
-        io.emit('locationUpdate', { droneIdentifier, decryptedLatitude, decryptedLongitude });
+        io.emit('locationUpdate', { droneIdentifier, latitude: decryptedLatitude, longitude: decryptedLongitude });
 
         console.log('GPS data updated:', updatedGPSData);
     } catch (err) {
