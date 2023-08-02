@@ -3,7 +3,7 @@
  ```shell
 git clone https://github.com/CMPE295A/drone-web-application
  ```
-2. Install dependencies for the client and server:
+2. Install dependencies in the client and server directory:
 ```shell
 cd client
 npm install
@@ -25,6 +25,20 @@ cd client && npm start
 cd server && nodemon index.js
 ```
 5. Navigate to http://localhost:4000 in your browser.
+
+## How to run app using Docker images from DockerHub
+1. Install Docker: https://docs.docker.com/get-docker/
+2. Pull server & client Docker images
+```shell
+docker pull aj09/drone-nodejs
+docker pull aj09/drone-react
+```
+3. Run the Docker images in seperate terminals
+```shell
+docker run -p 3000:3000 aj09/drone-nodejs
+docker run -p 4000:4000 aj09/drone-react
+```
+4. Navigate to http://localhost:4000 in your browser.
 
 
 ## How to run using Docker compose
