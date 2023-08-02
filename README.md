@@ -47,7 +47,7 @@ docker pull aj09/drone-react
 3. Run the Docker images in seperate terminals
 ```shell
 docker run -p 3000:3000 aj09/drone-nodejs
-docker run -p 4000:4000 aj09/drone-react
+docker run -p 4000:80 aj09/drone-react
 ```
 4. Navigate to http://localhost:4000 in your browser.
 
