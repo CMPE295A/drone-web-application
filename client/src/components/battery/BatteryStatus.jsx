@@ -4,6 +4,7 @@ import { backendUrl } from "../../config";
 import axios from "axios";
 // import io from 'socket.io-client';
 import { SocketContext } from '../../contextApi/SocketContext';
+import { Link } from 'react-router-dom';
 
 const BatteryStatus = () => {
     const [batteryLevel, setBatteryLevel] = useState(null);
@@ -20,7 +21,7 @@ const BatteryStatus = () => {
             try {
                 //get the battery level of the drone
                 const res = await axios.get(`${backendUrl}/battery/${droneIdentifier}`);
-                // console.log(res);
+                console.log(res);
                 setBatteryLevel(res.data.batteryLevel);
             } catch (err) {
                 console.log(err);
@@ -56,11 +57,14 @@ const BatteryStatus = () => {
 
             <BatteryIcon percentage={batteryLevel} charging={false} />
             <div className={'batteryPercentage'}>
-                {batteryLevel}%
+
+                <Link to={`/${droneIdentifier}/battery`} style={{ textDecoration: 'none' }}>
+                    {batteryLevel ? batteryLevel + ' %' : 'Loading...'}
+                </Link>
             </div>
 
 
-        </div>
+        </div >
     );
 }
 
