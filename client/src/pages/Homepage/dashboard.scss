@@ -1,0 +1,82 @@
+.dashboard {
+  // display: grid;
+  // grid-template-columns: repeat(2, 1fr); //two equal-width columns
+
+  // gap: 20px;
+  // padding: 10px;
+  // margin-bottom: 50px;
+  padding: 20px 70px;
+  background-color: #f6f3f3;
+  min-height: calc(100vh - 140px); //subtracted height of navbar & footer
+
+  .top {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 77px 10px 77px;
+  }
+
+
+
+
+  .overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); //two equal-width columns
+    gap: 50px;
+
+  }
+
+  .drone-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    background-color: white;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    h3 {
+      font-size: 1.2em;
+      font-weight: bold;
+      // color: #333;
+      color: black;
+      margin-bottom: 0.5em; //space below the title
+    }
+
+    p {
+      font-size: 1em;
+      color: #666; //lighter color than h4
+    }
+
+
+    .status {
+      font-size: 1em;
+
+      &--flying {
+        color: green;
+      }
+
+      &--idle {
+        color: blue;
+      }
+
+      &--offline {
+        color: red;
+      }
+    }
+
+  }
+
+  // .drone-card img {
+  //   width: 100%;
+  //   height: 200px;
+  //   object-fit: cover;
+  // }
+
+
+
+
+}
