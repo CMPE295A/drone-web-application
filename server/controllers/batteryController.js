@@ -34,12 +34,27 @@ const getBatteryHistory = async (req, res) => {
         if (!droneId) {
             return res.status(404).json({ message: "droneIdentifier not found" });
         }
-        const batteryHistory = await batteryModel.find({ droneIdentifier: droneId })
-            .sort({ timestamp: -1 })
-            .limit(limit);
+
+        //retrieve the past 5 hours
+        const hoursAgo = new Date();
+        hoursAgo.setHours(hoursAgo.getHours() - 5);
+
+        // console.log(hoursAgo)
+
+
+        const batteryHistory = await batteryModel.find({
+            droneIdentifier: droneId,
+            createdAt: {
+                $gte: hoursAgo,
+            }
+        }).sort({ createdAt: 1 }).limit(limit);
+
+
         if (batteryHistory.length === 0) {
             return res.status(404).json({ message: "battery history not found" });
         }
+
+        console.log(batteryHistory)
         res.json(batteryHistory);
     } catch (err) {
         res.status(500).json({ message: err.message });
