@@ -45,7 +45,7 @@ const Login = () => {
     //navigate to the homepage ('/') when the currentUser state is updated after succesful login
     useEffect(() => {
         if (currentUser) {
-            navigate('/');
+            navigate('/dashboard');
         }
     }, [currentUser, navigate]);
 

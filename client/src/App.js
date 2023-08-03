@@ -47,11 +47,11 @@ const App = () => {
   //client-sidew auth
   const ProtectedRoute = ({ children }) => {
     const { currentUser } = useContext(AuthContext);
-
-    // if (!currentUser) {
-    //   console.log('Not CURRENT USER: ' + currentUser);
-    //   return <Navigate to="/login" />;
-    // }
+    // console.log(currentUser);
+    if (!currentUser) {
+      // console.log('Not CURRENT USER: ' + currentUser);
+      return <Navigate to="/login" />;
+    }
 
 
     return children;
@@ -70,16 +70,24 @@ const App = () => {
       //nested routes
       children: [
         {
-          path: "/",
+          path: "/drone1",
           element: <Map />,
         },
 
         {
-          path: "/battery",
+          path: "/drone1/battery",
           element: <BatteryChart />,
         },
 
       ],
+    },
+    {
+      path: "/dashboard",
+      element: (
+        <ProtectedRoute>
+          <Main />
+        </ProtectedRoute>
+      ),
     },
     {
       path: "/login",

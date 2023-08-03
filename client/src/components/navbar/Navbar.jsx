@@ -70,7 +70,7 @@ const Navbar = () => {
         <div className="navbar">
 
             <div className="left">
-                <Link to="/" style={{ textDecoration: "none" }}>
+                <Link to="/dashboard" style={{ textDecoration: "none" }}>
                     <span className="logo">Drone app</span>
                 </Link>
             </div>

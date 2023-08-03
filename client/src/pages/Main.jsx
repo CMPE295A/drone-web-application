@@ -1,16 +1,24 @@
 import Navbar from "../components/navbar/Navbar";
-import LeftBar from "../components/leftBar/LeftBar";
-import Map from "../components/gps/Map";
+import LeftBar from "./Homepage/LeftBar";
+import Dashboard from "./Homepage/Dashboard";
+import Footer from "../components/footer/Footer";
+import './main.scss';
 
 const Main = () => {
     return (
         <div>
-            <Navbar/>
-            <div>
-                <LeftBar/>
+            <Navbar />
+            <div style={{ display: "flex" }}>
+                <LeftBar />
+
+                <div style={{ flex: 6 }}>
+                    <Dashboard />
+                </div>
             </div>
-            <Map/>
-        </div>
+
+            <Footer />
+
+        </div >
     )
 }
 export default Main;
