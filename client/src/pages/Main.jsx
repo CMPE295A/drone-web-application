@@ -2,7 +2,7 @@ import Navbar from "../components/navbar/Navbar";
 import LeftBar from "./Homepage/LeftBar";
 import Dashboard from "./Homepage/Dashboard";
 import Footer from "../components/footer/Footer";
-import './main.scss';
+
 
 const Main = () => {
     return (
