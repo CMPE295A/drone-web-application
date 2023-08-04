@@ -48,7 +48,7 @@ const getSecretKey = async (secret) => {
         // if (fs.existsSync('secretKey.pem')) {
         //     return;
         // }
-        
+
         //store secret key to .pem file
         fs.writeFileSync('secretKey.pem', secret);
     } catch (err) {
@@ -59,7 +59,7 @@ const getSecretKey = async (secret) => {
 
 //generate the shared secret using mcu public key and server's private key
 const generateSharedSecret = async (publicKey) => { //public key is hex
-    // check if shared secret already in the server
+    // check if shared secret already exists in the server
     if (fs.existsSync('sharedSecret.pem')) {
         console.log('Shared secret already exists');
         return;
@@ -91,8 +91,38 @@ const generateSharedSecret = async (publicKey) => { //public key is hex
     // fs.writeFileSync('sharedSecret.pem', sharedSecretHex); //shared secret in hex
     fs.writeFileSync('sharedSecret.pem', sharedSecret); //in buffer format
 }
+
+//for testing shared secret generation
+const testSharedSecret = async (publicKey, privateKey) => { //public key is hex
+
+    // elliptic curve diffie-hellman
+    const ecdh = crypto.createECDH('secp256k1');
+
+    // Load server's private key
+    ecdh.setPrivateKey(privateKey, 'hex'); //set private key for ecdh
+
+    // Convert mcu public key back to Buffer
+    // const mcuPublicKey = Buffer.from('04' + publicKey, 'hex');  //prepend 0x04 if deleted
+    const mcuPublicKey = Buffer.from(publicKey, 'hex');
+
+    // Generate the shared secret
+    const sharedSecret = ecdh.computeSecret(mcuPublicKey);
+
+
+    // Convert the shared secret to hex
+    const sharedSecretHex = sharedSecret.toString('hex');
+
+    console.log('Shared Secret in hex: ', sharedSecretHex);
+    console.log('Shared Secret in buffer: ', sharedSecret);
+
+    // return the shared secret
+    return sharedSecret;
+
+
+}
 module.exports = {
     generateKeyPair,
     getSecretKey,
-    generateSharedSecret
+    generateSharedSecret,
+    testSharedSecret
 }
