@@ -4,6 +4,7 @@ const app = express(); // create an express app
 
 //for testing
 const { generateKeyPair } = require('./messageHandler/keyMessageHandler'); //test key generation
+const { generateSharedSecret } = require('./messageHandler/keyMessageHandler');
 
 //create a Socket.IO server for websocket and attach to http server
 const http = require('http').Server(app); //create http server
@@ -30,6 +31,7 @@ app.use(express.json()); // parse request bodies that are in JSON format.
 const port = 3000;
 //test
 generateKeyPair();
+generateSharedSecret('042ab3a76c0a408dab503144d76f4024edee9abcaa547a81c748e6d764a3e46f395cf48444d9b3971daeace974225580cf124f2beb7120daf23d8e166e205d93c9')
 
 
 //MQTT client starts when the web application starts
@@ -71,13 +73,14 @@ const userRoute = require("./routes/user");
 const gpsRoute = require("./routes/gps");
 const batteryRoute = require("./routes/battery");
 const temperatureRoute = require("./routes/temperature");
-
+const accelerometerRoute = require("./routes/accelerometer");
 
 app.use('/drone', droneRoute);
 app.use('/user', userRoute);
 app.use('/gps', gpsRoute);
 app.use('/battery', batteryRoute);
 app.use('/temperature', temperatureRoute);
+app.use('/accelerometer', accelerometerRoute);
 
 
 // Handle WebSocket connections
