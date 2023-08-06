@@ -45,8 +45,9 @@ function Map() {
         }
     }, [isLoaded]); //fetch the GPS data 
 
-    socket.on('locationUpdate', (data) => {
+    socket.on('gpsUpdate', (data) => {
         if (data.droneIdentifier === 'drone1') {
+            // console.log('socket :' + JSON.stringify(data));
             const { latitude, longitude } = data; // extract latitude and longitude from data
             const gps = { latitude, longitude }; // create a GPS object 
             // console.log(gps);
