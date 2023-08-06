@@ -15,34 +15,10 @@ const DroneMetrics = () => {
 
     const droneIdentifier = "drone1";
 
-    useEffect(() => {
-
-        // const getDroneMetrics = async () => {
-        //     try {
-        //         //get the battery level of the drone
-        //         const res = await axios.get(`${backendUrl}/gps/${droneIdentifier}`);
-        //         // console.log(res);
-        // setAltitudeLevel(res.data.altitudeLevel);
-        // setSpeedLevel(res.data.speedLevel);
-        // setDistance(res.data.distance);
-        // setTemperature(res.data.temperature);
-        //     } catch (err) {
-        //         console.log(err);
-        //         // setError('Failed to fetch drone metrics ');
-
-        //     }
-        // };
-        setAltitudeLevel(100);
-
-        // getDroneMetrics();
-
-
-
-    }, []);
 
     useEffect(() => {
 
-        //initial temperature level to display
+        // //initial temperature level to display
         const getTemperatureLevel = async () => {
             try {
                 //get the temperature level of the drone
@@ -56,7 +32,20 @@ const DroneMetrics = () => {
             }
         };
 
+        //initial altitude/speed from DB
+        const getGPSData = async () => {
+            try {
+                const res = await axios.get(`${backendUrl}/gps/${droneIdentifier}`);
+                console.log('gps' + res.data);
+                setAltitudeLevel(res.data.altitude);
+                setSpeedLevel(res.data.speed);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
         getTemperatureLevel();
+        getGPSData();
 
 
         // real time update temperature level using web socket
@@ -68,6 +57,21 @@ const DroneMetrics = () => {
             }
         });
 
+        // real time update altitude/speed using web socket
+        socket.on('gpsUpdate', (data) => {
+            console.log('altitude/speed' + data);
+            if (data.droneIdentifier === droneIdentifier) {
+                setAltitudeLevel(data.altitude);
+                setSpeedLevel(data.speed);
+            }
+        });
+
+
+        // clean up the socket listeners when the component unmounts
+        return () => {
+            socket.off('temperatureUpdate');
+            socket.off('gpsUpdate');
+        };
 
     }, []);
 
