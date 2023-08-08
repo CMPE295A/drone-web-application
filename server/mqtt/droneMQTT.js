@@ -4,6 +4,7 @@ const { handleGPS } = require('../messageHandler/gpsMessageHandler');
 const { handleBattery } = require("../messageHandler/batteryMessageHandler");
 const { handleVideo } = require("../messageHandler/videoMessageHandler");
 const { handleTemperature } = require('../messageHandler/tempMessageHandler');
+const { handleAccelerometer } = require('../messageHandler/accelerometerMessageHandler');
 const { getSecretKey } = require('../messageHandler/keyMessageHandler');
 // const { decryptMessage } = require('../messageHandler/decryptMessageHandler');
 
@@ -35,6 +36,7 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
     const addGPS = handleGPS(io);
     const addTemperature = handleTemperature(io);
     const addStatus = handleStatus(io);
+    const addAccelerometer = handleAccelerometer(io);
 
 
     // Connect to the AWS IoT broker using MQTT
@@ -64,8 +66,9 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
         client.subscribe('drone/+/gps');
         client.subscribe('drone/+/battery');
         client.subscribe('drone/+/temperature');
+        client.subscribe('drone/+/accelerometer');
         client.subscribe('drone/+/video'); //TODO
-        client.subscribe('drone/+/data');
+        client.subscribe('drone/+/data'); // topic for all data
 
         //keys from mcu
         client.subscribe('mcu/secretKey');
@@ -78,9 +81,11 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
             console.log("server's public key is published");
             // client.end(); // Close the connection when published
         });
-        client.publish('server/secretKey', sharedSecret, { retain: true }, () => { // shared secret from server
-            console.log("server generated shared secret is published");
-        });
+
+        //publish the shared secret generated from server to MCU if needed
+        // client.publish('server/secretKey', sharedSecret, { retain: true }, () => { // shared secret from server
+        //     console.log("server generated shared secret is published");
+        // });
 
     });
 
@@ -99,24 +104,29 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
             //using a single topic for all drone data
             if (topicName === 'data') {
 
-                const { status, gps, batteryLevel, temperature } = payload;
+                const { status, gps, batteryLevel, temperature, accelerometer } = payload;
 
                 if (status) {
-                    //decrypt drone's status, display real-time updates
+                    //decrypt drone's status, display real-time updates on react client
                     await addStatus(droneIdentifier, { status });
                 }
                 if (gps) {
-                    //decrypt and store gps data, display real-time updates
+                    //decrypt and store gps data, display real-time updates on react client
                     await addGPS(droneIdentifier, gps);
                 }
                 if (batteryLevel) {
 
-                    //decrypt and store battery data, display real-time updates
+                    //decrypt and store battery data, display real-time updates on react client
                     await addBattery(droneIdentifier, { batteryLevel });
                 }
                 if (temperature) {
-                    //decrypt and store temperature data, display real-time update
+                    //decrypt and store temperature data, display real-time update on react client
                     await addTemperature(droneIdentifier, { temperature });
+                }
+
+                if (accelerometer) {
+                    //decrypt accelerometer, store to db,  display real-time updates on react client
+                    await addAccelerometer(droneIdentifier, accelerometer );
                 }
             }
 
@@ -143,6 +153,11 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
 
                 //decrypt and store temperature data, display real-time update
                 await addTemperature(droneIdentifier, payload);
+            }
+
+            //update accelerometer status
+            else if (topicName === 'accelerometer') {
+                await addAccelerometer(droneIdentifier, payload);
             }
 
             //store the secret key from MCU for decryption
