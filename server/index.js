@@ -31,7 +31,7 @@ app.use(express.json()); // parse request bodies that are in JSON format.
 const port = 3000;
 //test
 generateKeyPair();
-generateSharedSecret('042ab3a76c0a408dab503144d76f4024edee9abcaa547a81c748e6d764a3e46f395cf48444d9b3971daeace974225580cf124f2beb7120daf23d8e166e205d93c9')
+// generateSharedSecret('042ab3a76c0a408dab503144d76f4024edee9abcaa547a81c748e6d764a3e46f395cf48444d9b3971daeace974225580cf124f2beb7120daf23d8e166e205d93c9')
 
 
 //MQTT client starts when the web application starts
