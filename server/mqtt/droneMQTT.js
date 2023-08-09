@@ -6,6 +6,7 @@ const { handleVideo } = require("../messageHandler/videoMessageHandler");
 const { handleTemperature } = require('../messageHandler/tempMessageHandler');
 const { handleAccelerometer } = require('../messageHandler/accelerometerMessageHandler');
 const { getSecretKey } = require('../messageHandler/keyMessageHandler');
+const { generateSharedSecret } = require('../messageHandler/keyMessageHandler');
 // const { decryptMessage } = require('../messageHandler/decryptMessageHandler');
 
 // const client = mqtt.connect('mqtt://localhost:1883'); //for mosquitto broker
@@ -24,8 +25,6 @@ const privateKey = fs.readFileSync(privateKeyPath);
 const serverPublicKey = fs.readFileSync('./publicKey.pem', 'utf8'); // in hex string
 
 const sharedSecret = fs.readFileSync('./sharedSecret.pem'); //in buffer
-
-
 // let sharedSecretKey;  // store shared secret in-memory?
 
 //set up the MQTT client with a Socket.IO server object as a parameter
@@ -71,12 +70,13 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
         client.subscribe('drone/+/data'); // topic for all data
 
         //keys from mcu
-        client.subscribe('mcu/secretKey');
         client.subscribe('mcu/publicKey');
         // client.subscribe('server/publicKey'); //for testing
+        // client.subscribe('mcu/secretKey'); //if MCU is generating the shared secret
+
 
         // publish the server's public key to MCU
-        // const payload = JSON.stringify({ publicKey: serverPublicKey }); //convert to JSON, not feasable for mcu?
+        // const serverPublicKeyPayload = JSON.stringify({ publicKey: serverPublicKey }); //convert to JSON, not feasable for mcu?
         client.publish('server/publicKey', serverPublicKey, { retain: true }, () => { // 'server/publicKey' topic
             console.log("server's public key is published");
             // client.end(); // Close the connection when published
@@ -126,7 +126,7 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
 
                 if (accelerometer) {
                     //decrypt accelerometer, store to db,  display real-time updates on react client
-                    await addAccelerometer(droneIdentifier, accelerometer );
+                    await addAccelerometer(droneIdentifier, accelerometer);
                 }
             }
 
@@ -165,7 +165,7 @@ const mqttClient = (io) => { //inject dependency 'io' object from index.js
                 console.log(payload.message);
                 await getSecretKey(payload.message);
             }
-            //generate shared secret using mcu public key; stored in file
+            //generate shared secret using mcu public key; store in file
             else if (topic === 'mcu/publicKey') {
                 console.log(payload.message);
                 await generateSharedSecret(payload.message);
