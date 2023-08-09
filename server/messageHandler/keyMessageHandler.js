@@ -34,7 +34,7 @@ const generateKeyPair = async () => {
     console.log('Raw Public key: ', rawPublicKeyHex);
 
     // Write keys to pem files
-    fs.writeFileSync('publicKey.pem', publicKeyHex);
+    fs.writeFileSync('publicKey.pem', rawPublicKeyHex);
     fs.writeFileSync('privateKey.pem', privateKeyHex);
 
 
@@ -60,10 +60,10 @@ const getSecretKey = async (secret) => {
 //generate the shared secret using mcu public key and server's private key
 const generateSharedSecret = async (publicKey) => { //public key is hex
     // check if shared secret already exists in the server
-    if (fs.existsSync('sharedSecret.pem')) {
-        console.log('Shared secret already exists');
-        return;
-    } //else generate new one
+    // if (fs.existsSync('sharedSecret.pem')) {
+    //     console.log('Shared secret already exists');
+    //     return;
+    // } //else generate new one
 
 
     // elliptic curve diffie-hellman
@@ -74,8 +74,8 @@ const generateSharedSecret = async (publicKey) => { //public key is hex
     ecdh.setPrivateKey(privateKeyHex, 'hex'); //set private key for ecdh
 
     // Convert mcu public key back to Buffer
-    // const mcuPublicKey = Buffer.from('04' + publicKey, 'hex');  //prepend 0x04 if deleted
-    const mcuPublicKey = Buffer.from(publicKey, 'hex');
+    const mcuPublicKey = Buffer.from('04' + publicKey, 'hex');  //prepend 0x04 if deleted
+    // const mcuPublicKey = Buffer.from(publicKey, 'hex');
 
 
     // Generate the shared secret
@@ -90,6 +90,7 @@ const generateSharedSecret = async (publicKey) => { //public key is hex
     // write shared secret to a file
     // fs.writeFileSync('sharedSecret.pem', sharedSecretHex); //shared secret in hex
     fs.writeFileSync('sharedSecret.pem', sharedSecret); //in buffer format
+    console.log('Shared secret generated');
 }
 
 //for testing shared secret generation
