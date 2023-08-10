@@ -5,15 +5,15 @@ const accelerometerSchema = new Schema({
     droneIdentifier: { type: String, required: true },
     horizontal: {
         type: Number,
-        require: true
+        required: true
     },
     vertical: {
         type: Number,
-        require: true
+        required: true
     },
     lateral: {
         type: Number,
-        require: true
+        required: true
     }
 
 },
