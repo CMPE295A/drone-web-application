@@ -6,7 +6,7 @@ import './accelerometer.scss';
 import accelIcon from './accelerometerIcon.png';
 
 const AccelerometerStatus = () => {
-    const [horizontal, setHorizontal] = useState(1);
+    const [horizontal, setHorizontal] = useState();
     const [vertical, setVertical] = useState(2);
     const [lateral, setLateral] = useState(3);
     // const [error, setError] = useState(null);
@@ -18,23 +18,22 @@ const AccelerometerStatus = () => {
     useEffect(() => {
 
         //initial Accelerometer level to display
-        // const getAccelerometerLevel = async () => {
-        //     try {
-        //         //get the Accelerometer level of the drone
-        //         const res = await axios.get(`${backendUrl}/accelerometer/${droneIdentifier}`);
-        //         console.log(res);
-        //         setAccelerometerLevel(res.data.AccelerometerLevel);
-        // setHorizontal(res.data.horizontal);
-        // setVertical(res.data.vertical);
-        // setLateral(res.data.lateral);
-        //     } catch (err) {
-        //         console.log(err);
-        //         // setError('Failed to fetch Accelerometer level');
+        const getAccelerometer = async () => {
+            try {
+                //get the Accelerometer level of the drone
+                const res = await axios.get(`${backendUrl}/accelerometer/${droneIdentifier}`);
+                // console.log('Accelerometer ' + res.data);
+                setHorizontal(res.data.horizontal);
+                setVertical(res.data.vertical);
+                setLateral(res.data.lateral);
+            } catch (err) {
+                console.log(err);
+                // setError('Failed to fetch Accelerometer level');
 
-        //     }
-        // };
+            }
+        };
 
-        // getAccelerometerLevel();
+        getAccelerometer();
 
 
         // real time update Accelerometer level using web socket
@@ -67,15 +66,15 @@ const AccelerometerStatus = () => {
 
                 {/* <Link to={`/${droneIdentifier}/Accelerometer`} style={{ textDecoration: 'none' }}> */}
                 <div>
-                    {horizontal ? 'x: ' + horizontal : 'Loading...'}
+                    {horizontal ? 'x: ' + horizontal.toFixed(2) : 'Loading...'}
                 </div>
 
                 <div>
-                    {vertical ? 'y: ' + vertical : 'Loading...'}
+                    {vertical ? 'y: ' + vertical.toFixed(2) : 'Loading...'}
                 </div>
 
                 <div>
-                    {lateral ? 'z: ' + lateral : 'Loading...'}
+                    {lateral ? 'z: ' + lateral.toFixed(2) : 'Loading...'}
                 </div>
                 {/* </Link> */}
             </div>
