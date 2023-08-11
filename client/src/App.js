@@ -15,6 +15,7 @@ import Footer from "./components/footer/Footer";
 import { useContext } from "react";
 import { AuthContext } from "./contextApi/AuthContext";
 import BatteryChart from './components/battery/BatteryChart';
+import Settings from './pages/Settings/Settings';
 
 
 const App = () => {
@@ -86,6 +87,14 @@ const App = () => {
       element: (
         <ProtectedRoute>
           <Main />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/settings",
+      element: (
+        <ProtectedRoute>
+          <Settings />
         </ProtectedRoute>
       ),
     },

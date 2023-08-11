@@ -1,0 +1,21 @@
+.settings {
+  // background-color: lightblue;
+  background-color: #f6f3f3;
+  padding: 10px 30px 10px 30px;
+  // min-height: 100vh;
+  min-height: calc(100vh - 140px); //subtracted height of navbar & footer
+
+
+  .top {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 77px 10px 77px;
+  }
+
+  .key {
+    padding: 20px;
+    // margin: 20px 0;
+    margin-left: 50px;
+  }
+}
+
