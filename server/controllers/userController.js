@@ -5,7 +5,7 @@ const { secretKey } = require("../Utils/config");
 
 const register = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        let { username, password } = req.body;
 
         //convert the username to lowercase
         username = username.toLowerCase();
@@ -22,7 +22,7 @@ const register = async (req, res) => {
 
         //Check if username is already taken
         const userTaken = await UserModel.findOne({ username });
-        console.log(username);
+        // console.log(username);
         if (userTaken) {
             //conflict
             res.status(409).json({ message: "Username is taken" });
@@ -33,7 +33,7 @@ const register = async (req, res) => {
             // Generate a JWT token
             const payload = { _id: data._id, username: data.username };
             const token = jwt.sign(payload, secretKey, {
-                expiresIn: 1008000,
+                expiresIn: '6hr',
             });
 
             res.status(201).json({ token });
@@ -50,21 +50,21 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const { username, password } = req.body;
+        let { username, password } = req.body;
 
         //convert the username to lowercase
         username = username.toLowerCase();
 
         const user = await UserModel.findOne({ username });
         if (!user) {
-            console.log("no user found");
+            console.log(`No user found with username: ${username}`);
             res.status(401).json({ message: "Invalid Credentials. Wrong username or password." });
             return;
         }
 
-        //hash password, then compare to hashed password in db
+        //hash user input password, then compare to the hashed password stored in db
         const match = await bcrypt.compare(password, user.password);
-        console.log(user.password);
+        // console.log(user.password);
         if (!match) {
             res.status(401).json({ message: "Invalid Credentials. Wrong username or password." });
             console.log('wrong password');
@@ -73,7 +73,7 @@ const login = async (req, res) => {
             // Generate a JWT token
             const payload = { _id: user._id, username: user.username };
             const token = jwt.sign(payload, secretKey, {
-                expiresIn: 1008000,
+                expiresIn: '6hr',
             });
 
             res.status(200).json({ token });
