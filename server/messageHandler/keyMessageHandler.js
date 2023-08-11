@@ -3,10 +3,10 @@ const fs = require('fs');
 
 const generateKeyPair = async () => {
     // check if keys already exist in the server
-    if (fs.existsSync('publicKey.pem') && fs.existsSync('privateKey.pem')) {
-        console.log('Keys already exist');
-        return;
-    } //else generate new ones
+    // if (fs.existsSync('publicKey.pem') && fs.existsSync('privateKey.pem')) {
+    //     console.log('Keys already exist');
+    //     return;
+    // } //else generate new ones
 
     //elliptic curve diffie-hellman
     const ecdh = crypto.createECDH('secp256k1'); //https://nodejs.org/api/crypto.html#cryptocreateecdhcurvename
@@ -22,7 +22,7 @@ const generateKeyPair = async () => {
     const publicKeyHex = publicKey.toString('hex');
     const privateKeyHex = privateKey.toString('hex');
 
-    console.log('Public key: ', publicKeyHex);
+    console.log('Public key in hex: ', publicKeyHex);
     console.log('Private key: ', privateKeyHex);
 
     // console.log('Buffer Public key: ', publicKey);
@@ -31,13 +31,21 @@ const generateKeyPair = async () => {
     //ignore 04 prefix (indicates the key is in uncompressed form) 
     const rawPublicKey = publicKey.slice(1);
     const rawPublicKeyHex = rawPublicKey.toString('hex');
-    console.log('Raw Public key: ', rawPublicKeyHex);
+    const rawPublicKeyAscii = rawPublicKey.toString('ascii');
+
+
+    console.log('Raw Public key: ', rawPublicKey);
+    console.log('Raw Public key in Hex: ', rawPublicKeyHex);
+    console.log('Raw Public key  in base64: ', rawPublicKey.toString('base64'));
+    console.log('Public key in ASCII: ', rawPublicKeyAscii);
+
 
     // Write keys to pem files
-    fs.writeFileSync('publicKey.pem', rawPublicKeyHex);
+    fs.writeFileSync('publicKey.pem', rawPublicKeyAscii);
     fs.writeFileSync('privateKey.pem', privateKeyHex);
 
-
+    //return the public key (buffer)
+    return rawPublicKey;
 }
 
 

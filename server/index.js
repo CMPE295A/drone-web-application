@@ -73,6 +73,8 @@ const gpsRoute = require("./routes/gps");
 const batteryRoute = require("./routes/battery");
 const temperatureRoute = require("./routes/temperature");
 const accelerometerRoute = require("./routes/accelerometer");
+const keysRoute = require("./routes/keys");
+
 
 app.use('/drone', droneRoute);
 app.use('/user', userRoute);
@@ -80,6 +82,8 @@ app.use('/gps', gpsRoute);
 app.use('/battery', batteryRoute);
 app.use('/temperature', temperatureRoute);
 app.use('/accelerometer', accelerometerRoute);
+app.use('/keys', keysRoute);
+
 
 
 // Handle WebSocket connections
