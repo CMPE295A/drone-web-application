@@ -29,7 +29,7 @@ const Login = () => {
             console.log(res.data);
 
             const { token } = res.data;
-            await login(token); //set token in local storage and context state
+            await login(token); //set token in session storage and context state
 
             // Navigate to home page after successful login
             // navigate('/');
