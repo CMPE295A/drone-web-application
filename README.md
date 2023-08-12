@@ -6,8 +6,7 @@
 - [How to run using Docker compose](#how-to-run-using-docker-compose)
 - [How to sign in as IAM user to the AWS Management Console](#how-to-sign-in-as-iam-user-to-the-aws-management-console)
 - [How to connect to AWS IoT core](#how-to-connect-to-aws-iot-core)
-
-
+- [System Architecture](#system-architecture)
 
 ## How to run locally
 1. Clone the repository:
@@ -79,3 +78,5 @@ docker run -p 4000:80 aj09/drone-react
 4. Configure the MQTT client in your code using the Host endpoint and port along with your certificate and keys
 5. Test using subscribe/publish to a topic on AWS IoT MQTT test client
 
+## System Architecture
+![System Architecture](https://github.com/CMPE295A/drone-web-application/assets/54551895/0481b6fa-4155-4f4f-9965-f95fa4f28bdd)
